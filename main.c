@@ -12,7 +12,6 @@ int main(void)
 {
     int data[MAX_SIZE];
     srandom(time(NULL));    //random is preferred over rand
-
     int i = 0;
     for (i = 0; i < 5; i++)
     {
@@ -59,7 +58,10 @@ void produce(int data[], int size)
         for (i = MAX_SIZE-1; i > -1; i--)
         {
 
-            data[i] = random();
+            int j = random();
+            j = j % size;
+            data[j] = random();
+            printf("Cell %d was just updated with %d\n", j, data[j]);
         }
 }
 
