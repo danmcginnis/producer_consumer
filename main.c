@@ -14,12 +14,12 @@ int main(int argc, char *argv[])
     int *full = &temp;      //this hack sucks. There has to be a better way.
     int size = temp;
     
-    printf("Size: %d\tFull: %d\n", size, *full);
     int data[size];
+    memset(data, 0, size);
+    //this seems like a hack, make it better
     srandom(time(NULL));    //random is preferred over rand
-   
 	produce(data, size, full);
-    printf("Size: %d\tFull: %d\n", size, *full);
+    consume(data, size, full);
     return 0;
 }
 
@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
  *
  * Output:
  *    none (should return a int to indicate success or failure)
+ *    prints each addition to the screen for testing purposes
  *
  * Modifies:
  *    The data[] array is filled with random numbers.
@@ -55,9 +56,14 @@ void produce(int data[], int size, int *full)
     while (*full > 0)
     {
             j = i % size;
-            data[j] = random();
-            i--;
+            if (data[j] == 0)
+            {
+                data[j] = random();
+            }
             *full = (*full) - 1;
-            printf("Cell %d was just updated with %d\n", j, data[j]);
+            i--;
+            printf("%16d was placed in cell %5d\n",  data[j], j);
+            //need to figure out a way to dynamically figure out
+            //cell padding based on input
      } 
 }
