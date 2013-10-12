@@ -7,6 +7,15 @@ The goal of this lab is to have multiple producer threads and consumer threads w
 
 To run the file:
 		
-		`make`
-		`./pc`
+		make
+		./pc x
+
+where `x` is the number of elements to be stored in the array.
+
+Current testing:
+
+	pc 200 > test
+	sort test
+
+
 
