@@ -7,6 +7,6 @@ The goal of this lab is to have multiple producer threads and consumer threads w
 
 To run the file:
 		
-		make
-		./pc
+		`make`
+		`./pc`
 
