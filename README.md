@@ -15,7 +15,8 @@ where `x` is the number of elements to be stored in the array.
 Current testing:
 
 	pc 200 > test
-	sort test
+	cut -c 1-16 test > temp
+	test_framework.py temp
 
 
 
