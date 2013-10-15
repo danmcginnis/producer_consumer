@@ -14,8 +14,7 @@ where `x` is the number of elements to be stored in the array.
 
 Current testing:
 
-	pc 200 > test
-	cut -c 1-16 test > temp
+	pc 200 | cut -c 1-16 > temp
 	test_framework.py temp
 
 
