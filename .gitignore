@@ -4,6 +4,10 @@ test
 out
 temp
 
+# Vargant files
+.vagrant
+Vagrantfile
+
 # Object files
 *.o
 *.ko
