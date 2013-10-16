@@ -1,1 +1,12 @@
 32767 keeps showing up...
+
+clean up the output, it's horrendous looking
+
+high resolution time stamp
+    should this be some sort of year-mont-day-hour-min-sec thing
+    or just the a second counter?
+
+log file output
+    open a file normally
+    or just open a shared memory region and rock that?
+

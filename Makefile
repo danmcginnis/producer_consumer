@@ -1,5 +1,5 @@
 CC = gcc # Compiler to use
-OPTIONS = -O2 -g -Wall # -g for debug, -O2 for optimise and -Wall additional messages
+OPTIONS = -O2 -g -Wall -pthread # -g for debug, -O2 for optimise and -Wall additional messages
 INCLUDES = -I . # Directory for header file
 OBJS = main.o module.o # List of objects to be build
 .PHONY: all clean # To declare all, clean are not files

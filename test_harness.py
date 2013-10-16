@@ -18,7 +18,9 @@ filename = filename[0]
 
 
 sp = 0
-uni = 0;
+uni = 0
+dups = 0
+dup_limit = 10
 payload = {}
 
 
@@ -32,12 +34,18 @@ for line in open(filename):
 for value in sorted(payload, key=payload.get, reverse=False):
     if payload[value] % 2 == 0:
         sp += 1
+        if payload[value] > dup_limit:
+            dups += 1
+            print(payload[value], " has been found more than ", dup_limit, " times.")
+            print("It is the ", dups, " instance.")
+
     else:
         print(value, '=>', payload[value])
         uni += 1
 
 print()
 print(sp, " pairs of numbers were entered.")
+
 if uni > 0:
     print("Test Failure! ---> ",  uni, " unique numbers were encountered.")
 else:
