@@ -10,3 +10,4 @@ log file output
     open a file normally
     or just open a shared memory region and rock that?
 
+something is up with the python program. its not counting negative numbers
