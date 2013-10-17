@@ -20,11 +20,13 @@ filename = filename[0]
 sp = 0
 uni = 0
 dup_limit = 2
+wc = 0
 payload = {}
 
 
 for line in open(filename):
     line = line.rstrip('\n')
+    wc += 1
     if line in payload:
        payload[line] += 1
     else:
@@ -41,7 +43,9 @@ for value in sorted(payload, key=payload.get, reverse=False):
         uni += 1
 
 print()
-print(sp, " pairs of numbers were entered.")
+print(sp, "unique sets of numbers were entered.")
+print(wc, "lines were encountered")
+
 
 if uni > 0:
     print("Test Failure! ---> ",  uni, " unique numbers were encountered.")

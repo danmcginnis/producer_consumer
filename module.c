@@ -28,10 +28,10 @@
  *    The current values in data are of no concern.
  *
  */
-void produce(int data[], int size, int *full, int id)
+void produce(long data[], long size, long *full, int id)
 {
-    int i = size;
-    int j = 0;
+    long i = size;
+    long j = 0;
     while (*full > 0)
     {
             j = i % size;
@@ -41,7 +41,7 @@ void produce(int data[], int size, int *full, int id)
             }
             *full = (*full) - 1;
             i--;
-            printf("%16d was placed in cell %5d of array number %d\n",  data[j], j, id);
+            printf("%12ld was placed in cell %5ld of array number %d\n",  data[j], j, id);
             //need to figure out a way to dynamically figure out
             //cell padding based on input
      } 
@@ -73,19 +73,19 @@ void produce(int data[], int size, int *full, int id)
  *    The current values in data are of no concern.
  *
  */
-void consume(int data[], int size, int *full, int id)
+void consume(long data[], long size, long *full, int id)
 {
 
-    int i = 0;
+    long i = 0;
 
         for (i = 0; i < size; i++)
         {
 
             if (data[i] != 0)
             {
-                int temp = data[i];
+                long temp = data[i];
                 data[i] = NULL;
-                printf("%16d was removed from cell %5d of array number %d\n", temp, i, id);
+                printf("%12ld was removed from cell %ld of array number %d\n", temp, i, id);
             }
         }
 }

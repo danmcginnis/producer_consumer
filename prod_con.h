@@ -7,7 +7,7 @@
 
 
 void print_array(int data[], int size);
-void produce(int data[], int size, int *full, int id);
-void consume(int data[], int size, int *full, int id);
+void produce(long data[], long size, long *full, int id);
+void consume(long data[], long size, long *full, int id);
 
 

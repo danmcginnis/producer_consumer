@@ -5,16 +5,16 @@
  void *thread_f(void *par)
     {
         int id = (int) par;
-        int temp = 5;
-        int *full = &temp;      //this hack sucks. There has to be a better way.
-        int size = temp;
+        long temp = 5000;
+        long *full = &temp;      //this hack sucks. There has to be a better way.
+        long size = temp;
         
 
         //go to sleep
         sem_wait(&sem1);
 
         //printf("Thread %d starting to work!\n", id);
-        int data[size];
+        long data[size];
         memset(data, 0, size);
         //this seems like a hack, make it better
        
