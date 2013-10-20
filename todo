@@ -11,3 +11,7 @@ log file output
     or just open a shared memory region and rock that?
 
 something is up with the python program. its not counting negative numbers
+	this may not be true. It could have been a problem with the thread max on ubuntu.
+
+
+Test this program on a physical ubuntu machine to see how it behaves.

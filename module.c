@@ -2,6 +2,33 @@
 
 
 
+void *thread_f(void* test)
+    {
+        
+        thread_data* foo = (thread_data*)test; /* Cast the void* to our struct type */
+        //int id = (int) par;
+        //sem_post(&sem1);        //Lock semaphore
+        pthread_mutex_lock(&mutex);
+        foo->size++;
+        printf("%d\n", foo->size);
+
+        pthread_mutex_unlock(&mutex);
+        //sem_wait(&sem1);
+        /*long temp = 5;
+        long *full = &temp;      //this hack sucks. There has to be a better way.
+        long size = temp;
+        
+        
+        long data[size];
+        memset(data, 0, size);
+        //this seems like a hack, make it better
+       
+        produce(data, size, full, id);
+        consume(data, size, full, id);
+        */
+        return NULL;
+    }
+
 /*
  * void produce(int data[], int size)
  *
@@ -41,7 +68,7 @@ void produce(long data[], long size, long *full, int id)
             }
             *full = (*full) - 1;
             i--;
-            printf("%12ld was placed in cell %5ld of array number %d\n",  data[j], j, id);
+            printf("%12ld was placed in cell %ld of array number %d\n",  data[j], j, id);
             //need to figure out a way to dynamically figure out
             //cell padding based on input
      } 

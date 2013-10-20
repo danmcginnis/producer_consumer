@@ -1,28 +1,5 @@
 #include "prod_con.h"
 
- sem_t sem1;
-
- void *thread_f(void *par)
-    {
-        int id = (int) par;
-        long temp = 5000;
-        long *full = &temp;      //this hack sucks. There has to be a better way.
-        long size = temp;
-        
-
-        //go to sleep
-        sem_wait(&sem1);
-
-        //printf("Thread %d starting to work!\n", id);
-        long data[size];
-        memset(data, 0, size);
-        //this seems like a hack, make it better
-       
-        produce(data, size, full, id);
-        consume(data, size, full, id);
-        return NULL;
-    }
-
 int main(int argc, char *argv[])
 {
 
@@ -32,36 +9,35 @@ int main(int argc, char *argv[])
         printf("pc x y with x being the number of threads to run and y being the size of the array\n");
         return 0;
     } */
+    
+    
+
+    thread_data test; // = (t_data*)malloc (sizeof(t_data));
+    test.size = 0;
+
+
     int NUM = atoi(argv[1]);
     //int temp = atoi(argv[1]);
     pthread_t threads[NUM];
-    int i;
+    int i = 0;
     //int *full = &temp;      //this hack sucks. There has to be a better way.
     //int size = temp;
 
+    sem_t sem1;
+    
 
     sem_init(&sem1, 0, 0);
 
     srandom(time(NULL));    //random is preferred over rand
 
-    for (i = 0; i < NUM; i++)
+    for (i; i < NUM; i++)
     {
-        pthread_create(&threads[i], NULL, thread_f, (void *)i);
-        
+        pthread_create(&threads[i], NULL, thread_f, &test);   
     }
 
-    //printf("Everyone wait...\n");
-
-    sleep(1);
-    //printf("Now Go!\n");
-
-    //wake threads
-    for(i = 0;i < NUM; i++)
-    {
-        sem_post(&sem1);
-    }
-        //give some time to the threads
-        sleep(1);
-        //printf("Main is quitting.\n");
+    
+    (void) sleep(1);
+   
+    
     return 0;
 }
