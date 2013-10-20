@@ -32,11 +32,14 @@ int main(int argc, char *argv[])
 
     for (i; i < NUM; i++)
     {
+        test.counter = i;
         pthread_create(&threads[i], NULL, thread_f, &test);   
     }
 
     
     (void) sleep(1);
+
+    print_array(test.data, MAX_SIZE);
    
     
     return 0;

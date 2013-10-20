@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+#define MAX_SIZE 20
 
 pthread_mutex_t mutex;
 
@@ -12,6 +13,7 @@ typedef struct
 {
     int size;
     int counter;
+    int data[MAX_SIZE];
 } thread_data;
 
 

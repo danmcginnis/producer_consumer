@@ -9,8 +9,10 @@ void *thread_f(void* test)
         //int id = (int) par;
         //sem_post(&sem1);        //Lock semaphore
         pthread_mutex_lock(&mutex);
+        int i = foo->size;
         foo->size++;
-        printf("%d\n", foo->size);
+        foo->data[i] = i;
+        printf("Thread number: %d, size: %d, i: %d, data[i]: %d\n", foo->counter, foo->size, i, foo->data[i]);
 
         pthread_mutex_unlock(&mutex);
         //sem_wait(&sem1);
