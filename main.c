@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     
     
 
-    thread_data test; // = (t_data*)malloc (sizeof(t_data));
+    t_data test; // = (t_data*)malloc (sizeof(t_data));
     test.size = 0;
 
 
@@ -32,8 +32,11 @@ int main(int argc, char *argv[])
 
     for (i; i < NUM; i++)
     {
+        pthread_mutex_lock(&mutex1);
         test.counter = i;
+        pthread_mutex_unlock(&mutex1);
         pthread_create(&threads[i], NULL, thread_f, &test);   
+        
     }
 
     

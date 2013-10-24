@@ -8,13 +8,14 @@
 #define MAX_SIZE 20
 
 pthread_mutex_t mutex;
+pthread_mutex_t mutex1;
 
-typedef struct
+typedef struct Thread_data
 {
     int size;
     int counter;
     int data[MAX_SIZE];
-} thread_data;
+} t_data;
 
 
 void print_array(int data[], int size);
