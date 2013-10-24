@@ -1,33 +1,67 @@
 #include "prod_con.h"
 
 
+void producer(t_data *data)
+{
+    printf("I'm a producer\n");
+    data->size++;
+    printf("%d\n", data->size);
+    // int payload;
+    // while (TRUE) 
+    // {
+    //     payload = random();
+    //     down(&empty);
+    //     pthread_mutex_lock(&mutex);
+    //     enter_item(item);
+    //     printf("%12ld was placed in cell %ld of array number %d\n",  payload, j, id);
+    //     pthread_mutex_unlock(&mutex);
+    //     up(&full);
+    // }
+}
+
+void consumer(t_data *data) 
+{
+    printf("I'm a consumer\n");
+    data->size++;
+    printf("%d\n", data->size);
+    // int item;
+    // while (TRUE) 
+    // {
+    //     down(&full);
+    //     pthread_mutex_lock(&mutex);
+    //     remove_item(&item);
+    //     up(&mutex);
+    //     pthread_mutex_unlock(&empty);
+    //     consume_item(item);
+    // }
+}
 
 void *thread_f(void* test)
     {
         
-        t_data* foo = (t_data*)test; /* Cast the void* to our struct type */
-        //int id = (int) par;
-        //sem_post(&sem1);        //Lock semaphore
-        pthread_mutex_lock(&mutex);
-        int i = foo->size;
-        foo->size++;
-        foo->data[i] = i;
-        printf("Thread number: %d, size: %d, i: %d, data[i]: %d\n", foo->counter, foo->size, i, foo->data[i]);
+        // t_data* foo = (t_data*)test; /* Cast the void* to our struct type */
+        // //int id = (int) par;
+        // //sem_post(&sem1);        //Lock semaphore
+        // pthread_mutex_lock(&mutex);
+        // int i = foo->size;
+        // foo->size++;
+        // foo->data[i] = i;
+        // printf("Thread number: %d, size: %d, i: %d, data[i]: %d\n", foo->counter, foo->size, i, foo->data[i]);
 
-        pthread_mutex_unlock(&mutex);
-        //sem_wait(&sem1);
-        /*long temp = 5;
-        long *full = &temp;      //this hack sucks. There has to be a better way.
-        long size = temp;
+        // pthread_mutex_unlock(&mutex);
+        // //sem_wait(&sem1);
+        // /*long temp = 5;
+        // long *full = &temp;      //this hack sucks. There has to be a better way.
+        // long size = temp;
         
         
-        long data[size];
-        memset(data, 0, size);
-        //this seems like a hack, make it better
+        // long data[size];
+        
+        // //this seems like a hack, make it better
        
-        produce(data, size, full, id);
-        consume(data, size, full, id);
-        */
+        // produce(data, size, full, id);
+        // consume(data, size, full, id);
+        // */
         return NULL;
     }
 
@@ -56,7 +90,7 @@ void *thread_f(void* test)
  *    size accuratley represents the size of data.
  *    The current values in data are of no concern.
  *
- */
+ *
 void produce(long data[], long size, long *full, int id)
 {
     long i = size;
@@ -66,15 +100,16 @@ void produce(long data[], long size, long *full, int id)
             long j = i % size;
             if (data[j] == 0)
             {
-                data[j] = random();
+                
             }
             *full = (*full) - 1;
             i--;
-            printf("%12ld was placed in cell %ld of array number %d\n",  data[j], j, id);
+            
             //need to figure out a way to dynamically figure out
             //cell padding based on input
      } 
 }
+*/
 
 /*
  * void consume(int data[], int size, int *full)
@@ -101,7 +136,7 @@ void produce(long data[], long size, long *full, int id)
  *    size accuratley represents the size of data.
  *    The current values in data are of no concern.
  *
- */
+ *
 void consume(long data[], long size, long *full, int id)
 {
 
@@ -118,6 +153,7 @@ void consume(long data[], long size, long *full, int id)
             }
         }
 }
+*/
 
 
 
@@ -144,7 +180,7 @@ void consume(long data[], long size, long *full, int id)
  *    data[] has already been allocated.
  *    size accuratley represents the size of data.
  *
- */
+ *
 void print_array(int data[], int size)
 {
     int i = 0;
@@ -154,5 +190,6 @@ void print_array(int data[], int size)
     }
     printf("\n\n");
 }
+*/
 
 
