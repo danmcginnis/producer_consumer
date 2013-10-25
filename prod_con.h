@@ -6,7 +6,7 @@
 #include <semaphore.h>
 
 #define TRUE 1
-#define MAX_SIZE 100
+#define MAX_SIZE 10000
 
 
 

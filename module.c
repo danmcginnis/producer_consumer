@@ -105,7 +105,7 @@ void *consumer(void *indata)
     //struct timespec time_stamp;
     while(TRUE)
     {
-        sleep(random()/1000000000000);
+        sleep(random()/100000000000);
         sem_wait(&data->full);
         pthread_mutex_lock(&data->mutex);
         if(data->counter < MAX_SIZE) 
