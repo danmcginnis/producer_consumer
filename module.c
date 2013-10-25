@@ -114,15 +114,12 @@ void *consumer(void *indata)
                 long temp = data->buffer[data->counter];
                 data->buffer[data->counter] = NULL;
                 data->counter--;
-                //printf("%d\n", data->counter);
-                //printf("Payload removed = %lu\n", temp);
                 clock_gettime(CLOCK_REALTIME, &time_stamp);
                 printf("%15lu was removed from the data structure at %lu time.\n", temp, time_stamp.tv_nsec);
             }
             else
             {
                 data->counter--;
-                //printf("%d\n", data->counter);
             }
         }
         pthread_mutex_unlock(&data->mutex);
