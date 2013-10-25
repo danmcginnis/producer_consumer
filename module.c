@@ -101,7 +101,7 @@ void *producer(void *indata)
 void *consumer(void *indata) 
 {
     t_data *data = indata;
-    struct timespec time_stamp;
+    //struct timespec time_stamp;
     while(TRUE)
     {
         sleep(random()/10000000000);
@@ -114,8 +114,8 @@ void *consumer(void *indata)
                 long temp = data->buffer[data->counter];
                 data->buffer[data->counter] = NULL;
                 data->counter--;
-                clock_gettime(CLOCK_REALTIME, &time_stamp);
-                printf("%15lu was removed from the data structure at %lu time.\n", temp, time_stamp.tv_nsec);
+                //clock_gettime(CLOCK_REALTIME, &time_stamp);
+                printf("%15lu was removed from the data structure at x time.\n", temp /*, time_stamp.tv_nsec*/);
             }
             else
             {
