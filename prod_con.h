@@ -17,6 +17,7 @@ typedef struct Thread_data
     pthread_mutex_t mutex;
     int size;
     int counter;
+    int full_counter;
     int empty;
     int full;
     int time_delay;

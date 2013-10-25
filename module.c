@@ -42,14 +42,15 @@ void *producer(void *indata)
     
     while(TRUE)
     {
-        sleep(random()/1000000000);
+        sleep(random()/100000000000);
         long payload = random();                      //produce item
         sem_wait(&data->sem_empty);                  
         pthread_mutex_lock(&data->mutex);             //lock the mutex
-        if(data->counter < MAX_SIZE) 
+        if(data->full_counter > 0) 
         {
-            data->buffer[data->counter] = payload;
-            data->counter++;
+            data->buffer[data->full_counter] = payload;
+            printf("Producer counter = %d\n", data->full_counter);
+            data->full_counter--;
             printf("%15lu was written to the data structure at x time.\n", payload);
         }
         pthread_mutex_unlock(&data->mutex);             //unlock mutex
@@ -104,22 +105,23 @@ void *consumer(void *indata)
     //struct timespec time_stamp;
     while(TRUE)
     {
-        sleep(random()/10000000000);
+        sleep(random()/1000000000000);
         sem_wait(&data->full);
         pthread_mutex_lock(&data->mutex);
-        if(data->counter > 0) 
+        if(data->counter < MAX_SIZE) 
         {
             if (data->buffer[data->counter] != 0)
             {
                 long temp = data->buffer[data->counter];
                 data->buffer[data->counter] = NULL;
-                data->counter--;
+                printf("Consumer counter = %d\n", data->counter);
+                data->counter++;
                 //clock_gettime(CLOCK_REALTIME, &time_stamp);
                 printf("%15lu was removed from the data structure at x time.\n", temp /*, time_stamp.tv_nsec*/);
             }
             else
             {
-                data->counter--;
+                data->counter++;
             }
         }
         pthread_mutex_unlock(&data->mutex);
