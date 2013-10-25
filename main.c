@@ -18,11 +18,6 @@ int main(int argc, char *argv[])
     // int Time_delay = atoi(argv[3]);
 
     static t_data test = {.size = MAX_SIZE, .time_delay = Time_delay, .full = MAX_SIZE, .empty = 0, .counter = 0};
-    if (&test == NULL)
-    {
-        printf("Failure to initialize data structure\n");
-        exit(1);
-    }
     pthread_mutex_init (&test.mutex, NULL);
     sem_init(&test.empty, 0, MAX_SIZE);
     sem_init(&test.full, 0, 0);

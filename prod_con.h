@@ -28,4 +28,6 @@ void print_array(int data[], int size);
 void *producer(void *indata);
 void *consumer(void *indata);
 
+//int clock_gettime(clockid_t clk_id, struct timespect *tp); //per http://www.guyrutenberg.com/2007/09/22/profiling-code-using-clock_gettime/
+
 
