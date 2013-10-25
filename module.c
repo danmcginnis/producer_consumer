@@ -4,68 +4,68 @@
 void *producer(void *indata)
 {
     t_data *data = indata;
-    printf("I'm a producer\n");
-    data->size++;
-    printf("%d\n", data->size);
-    // int payload;
-    // while (TRUE) 
-    // {
-    //     payload = random();
-    //     down(&empty);
-    //     pthread_mutex_lock(&mutex);
-    //     enter_item(item);
-    //     printf("%12ld was placed in cell %ld of array number %d\n",  payload, j, id);
-    //     pthread_mutex_unlock(&mutex);
-    //     up(&full);
-    // }
+    
+    while(TRUE)
+    {
+        sleep(random()/1000000000);
+        long payload = random();                      //produce item
+        sem_wait(&data->sem_empty);                  
+        pthread_mutex_lock(&data->mutex);             //lock the mutex
+        if(data->counter < MAX_SIZE) 
+        {
+            data->buffer[data->counter] = payload;
+            data->counter++;
+            //printf("%d\n", data->counter);
+            //printf("Payload delivered = %lu\n", payload);
+            printf("%15lu was written to the data structure at x time.\n", payload);
+        }
+        pthread_mutex_unlock(&data->mutex);             //unlock mutex
+        sem_post(&data->sem_full);
+    }
+    return NULL;
 }
 
 void *consumer(void *indata) 
 {
     t_data *data = indata;
-    printf("I'm a consumer\n");
-    data->size++;
-    printf("%d\n", data->size);
-    // int item;
-    // while (TRUE) 
-    // {
-    //     down(&full);
-    //     pthread_mutex_lock(&mutex);
-    //     remove_item(&item);
-    //     up(&mutex);
-    //     pthread_mutex_unlock(&empty);
-    //     consume_item(item);
-    // }
+
+    while(TRUE)
+    {
+        sleep(random()/10000000000);
+        sem_wait(&data->full);
+        pthread_mutex_lock(&data->mutex);
+        if(data->counter > 0) 
+        {
+            if (data->buffer[data->counter] != 0)
+            {
+                long temp = data->buffer[data->counter];
+                data->buffer[data->counter] = NULL;
+                data->counter--;
+                //printf("%d\n", data->counter);
+                //printf("Payload removed = %lu\n", temp);
+                printf("%15lu was removed from the data structure at x time.\n", temp);
+            }
+            else
+            {
+                data->counter--;
+                //printf("%d\n", data->counter);
+            }
+        }
+        pthread_mutex_unlock(&data->mutex);
+        sem_post(&data->full);
+    }
+    return NULL;
 }
 
-void *thread_f(void* test)
-    {
+
         
         // t_data* foo = (t_data*)test; /* Cast the void* to our struct type */
-        // //int id = (int) par;
-        // //sem_post(&sem1);        //Lock semaphore
-        // pthread_mutex_lock(&mutex);
-        // int i = foo->size;
-        // foo->size++;
-        // foo->data[i] = i;
-        // printf("Thread number: %d, size: %d, i: %d, data[i]: %d\n", foo->counter, foo->size, i, foo->data[i]);
-
-        // pthread_mutex_unlock(&mutex);
-        // //sem_wait(&sem1);
+       
+        
         // /*long temp = 5;
         // long *full = &temp;      //this hack sucks. There has to be a better way.
         // long size = temp;
-        
-        
-        // long data[size];
-        
-        // //this seems like a hack, make it better
-       
-        // produce(data, size, full, id);
-        // consume(data, size, full, id);
-        // */
-        return NULL;
-    }
+   
 
 /*
  * void produce(int data[], int size)
@@ -147,12 +147,7 @@ void consume(long data[], long size, long *full, int id)
         for (i = 0; i < size; i++)
         {
 
-            if (data[i] != 0)
-            {
-                long temp = data[i];
-                data[i] = NULL;
-                printf("%12ld was removed from cell %ld of array number %d\n", temp, i, id);
-            }
+            
         }
 }
 */

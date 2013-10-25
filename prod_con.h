@@ -5,19 +5,22 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#define MAX_SIZE 20
-
+#define TRUE 1
+#define MAX_SIZE 100
 
 
 
 typedef struct Thread_data
 {
-    sem_t empty;
-    sem_t full;
+    sem_t sem_empty;
+    sem_t sem_full;
     pthread_mutex_t mutex;
     int size;
-    int head, tail;
-    int data[MAX_SIZE];
+    int counter;
+    int empty;
+    int full;
+    int time_delay;
+    long buffer[MAX_SIZE];
 } t_data;
 
 

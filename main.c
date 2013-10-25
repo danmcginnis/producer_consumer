@@ -1,66 +1,54 @@
 #include "prod_con.h"
 
-#define NUM 2
+#define NUM 200
 #define THREAD_COUNT 2
+#define Time_delay 1
 
 int main(int argc, char *argv[])
 {
 
-    static t_data test = {.size = 1};
+    // if (argc < 4)
+    // {
+    //     printf("Proper usage: \n");
+    //     printf("pc "number of producer threads" " number of consumer threads" "delay between threads"\n");
+    //     return 0;
+    // } 
+    // int num_pro_threads = atoi(argv[1]);
+    // int num_con_threads = atoi(argv[2]);
+    // int Time_delay = atoi(argv[3]);
+
+    static t_data test = {.size = MAX_SIZE, .time_delay = Time_delay, .full = MAX_SIZE, .empty = 0, .counter = 0};
     if (&test == NULL)
     {
         printf("Failure to initialize data structure\n");
         exit(1);
     }
     pthread_mutex_init (&test.mutex, NULL);
-    sem_init(&test.empty, 0, 0);
+    sem_init(&test.empty, 0, MAX_SIZE);
     sem_init(&test.full, 0, 0);
 
-    memset(test.data, 0, MAX_SIZE);  //to zero out array initially
+    memset(test.buffer, 0, MAX_SIZE);  //to zero out array initially
 
     srandom(time(NULL));    //random is preferred over rand
    
     pthread_t pro_threads[NUM];
     pthread_t con_threads[NUM];
 
-    for (int i = 0; i < NUM; i++)
+    int i = 0;
+    for (i; i < NUM; i++)
     {
         pthread_create(&pro_threads[i], NULL, producer, &test);
         pthread_create(&con_threads[i], NULL, consumer, &test);
     }
 
-    for (int i=0; i< argc; i++) 
+    (void) sleep(1);
+    i = 0;
+    for (i; i < NUM; i++) 
     {
         pthread_join(pro_threads[i], NULL);
         pthread_join(con_threads[i], NULL);
     }
-    /*if (argc < 2)
-    {
-        printf("Proper usage: \n");
-        printf("pc x y with x being the number of threads to run and y being the size of the array\n");
-        return 0;
-    } 
     
-    
-
-    
-    int NUM = atoi(argv[1]);
-    //int temp = atoi(argv[1]);
-    
-    int i = 0;
-    //int *full = &temp;      //this hack sucks. There has to be a better way.
-    //int size = temp;
-
-    
-    
-
-    
-
-    
-    (void) sleep(1);
-
-    print_array(test.data, MAX_SIZE);
-   */
     pthread_mutex_destroy(&test.mutex);
     return 0;
 }
