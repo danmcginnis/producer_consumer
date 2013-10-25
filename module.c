@@ -1,8 +1,9 @@
 #include "prod_con.h"
 
 
-void producer(t_data *data)
+void *producer(void *indata)
 {
+    t_data *data = indata;
     printf("I'm a producer\n");
     data->size++;
     printf("%d\n", data->size);
@@ -19,8 +20,9 @@ void producer(t_data *data)
     // }
 }
 
-void consumer(t_data *data) 
+void *consumer(void *indata) 
 {
+    t_data *data = indata;
     printf("I'm a consumer\n");
     data->size++;
     printf("%d\n", data->size);

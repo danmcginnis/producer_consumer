@@ -1,6 +1,7 @@
 #include "prod_con.h"
 
 #define NUM 2
+#define THREAD_COUNT 2
 
 int main(int argc, char *argv[])
 {
@@ -19,16 +20,20 @@ int main(int argc, char *argv[])
 
     srandom(time(NULL));    //random is preferred over rand
    
-    pthread_t threads[NUM];
-
-    producer(&test);
-    consumer(&test);
+    pthread_t pro_threads[NUM];
+    pthread_t con_threads[NUM];
 
     for (int i = 0; i < NUM; i++)
     {
-        pthread_create(&threads[i], NULL, thread_f, &test);
+        pthread_create(&pro_threads[i], NULL, producer, &test);
+        pthread_create(&con_threads[i], NULL, consumer, &test);
     }
 
+    for (int i=0; i< argc; i++) 
+    {
+        pthread_join(pro_threads[i], NULL);
+        pthread_join(con_threads[i], NULL);
+    }
     /*if (argc < 2)
     {
         printf("Proper usage: \n");
@@ -56,6 +61,6 @@ int main(int argc, char *argv[])
 
     print_array(test.data, MAX_SIZE);
    */
-    
+    pthread_mutex_destroy(&test.mutex);
     return 0;
 }

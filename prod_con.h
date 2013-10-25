@@ -22,8 +22,7 @@ typedef struct Thread_data
 
 
 void print_array(int data[], int size);
-void *thread_f(void* data);
-void produce(t_data *data);
-void consume(t_data *data);
+void *producer(void *indata);
+void *consumer(void *indata);
 
 
