@@ -1,6 +1,6 @@
 #include "prod_con.h"
 
-#define NUM 200
+#define NUM 2560
 #define THREAD_COUNT 2
 
 
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     // int num_con_threads = atoi(argv[2]);
     // int Time_delay = atoi(argv[3]);
 
-    static t_data test = {.tail = MAX_SIZE, .head = 0, .counter = 0};
+    static t_data test = {.tail = 0, .head = 0, .counter = 0};
     pthread_mutex_init (&test.mutex, NULL);
     sem_init(&test.empty, 0, MAX_SIZE);
     sem_init(&test.full, 0, 0);
