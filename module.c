@@ -42,19 +42,22 @@ void *producer(void *indata)
     
     while(TRUE)
     {
-        sleep(random()/100000000000);
-        long payload = random();                      //produce item
-        sem_wait(&data->sem_empty);                  
-        pthread_mutex_lock(&data->mutex);             //lock the mutex
-        if(data->full_counter > 0) 
+        // add a for loop here to change the denominator of the below statement!!!!!!!
+        sleep(random()/10000000);
+        int payload = random();                      //produce item
+        if (data->counter == MAX_SIZE)
         {
-            data->buffer[data->full_counter] = payload;
-            printf("Producer counter = %d\n", data->full_counter);
-            data->full_counter--;
-            printf("%15lu was written to the data structure at x time.\n", payload);
-        }
+            sem_wait(&data->empty);    
+        }                
+        pthread_mutex_lock(&data->mutex);             //lock the mutex
+        data->buffer[data->tail] = payload;
+        printf("%15d was written to the data structure at x time.\n", payload);
+        printf("\tProducer tail = %d", data->tail);
+        printf("\tCounter = %d\n", data->counter);
+        data->tail = (data->tail - 1) % MAX_SIZE;
+        data->counter++;
         pthread_mutex_unlock(&data->mutex);             //unlock mutex
-        sem_post(&data->sem_full);
+        sem_post(&data->full);
     }
     return NULL;
 }
@@ -102,28 +105,23 @@ void *producer(void *indata)
 void *consumer(void *indata) 
 {
     t_data *data = indata;
-    //struct timespec time_stamp;
     while(TRUE)
     {
-        sleep(random()/100000000000);
-        sem_wait(&data->full);
-        pthread_mutex_lock(&data->mutex);
-        if(data->counter < MAX_SIZE) 
+        // add a for loop here to change the denominator of the below statement!!!!!!!
+        sleep(random()/10000000);
+        
+        if(data->counter == 0) 
         {
-            if (data->buffer[data->counter] != 0)
-            {
-                long temp = data->buffer[data->counter];
-                data->buffer[data->counter] = NULL;
-                printf("Consumer counter = %d\n", data->counter);
-                data->counter++;
-                //clock_gettime(CLOCK_REALTIME, &time_stamp);
-                printf("%15lu was removed from the data structure at x time.\n", temp /*, time_stamp.tv_nsec*/);
-            }
-            else
-            {
-                data->counter++;
-            }
+            sem_wait(&data->empty);
         }
+        pthread_mutex_lock(&data->mutex);
+        int temp = data->buffer[data->head];
+        data->buffer[data->head] = NULL;
+        printf("%15d was removed from the data structure at x time.\n", temp /*, time_stamp.tv_nsec*/);
+        printf("\tConsumer head = %d", data->head);
+        printf("\tCounter = %d\n", data->counter);
+        data->head = (data->head + 1) % MAX_SIZE;
+        data->counter;
         pthread_mutex_unlock(&data->mutex);
         sem_post(&data->full);
     }
