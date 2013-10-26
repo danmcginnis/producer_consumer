@@ -2,7 +2,7 @@
 
 #define NUM 200
 #define THREAD_COUNT 2
-#define Time_delay 1
+
 
 int main(int argc, char *argv[])
 {
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     // int num_con_threads = atoi(argv[2]);
     // int Time_delay = atoi(argv[3]);
 
-    static t_data test = {.size = MAX_SIZE, .time_delay = Time_delay, .full = MAX_SIZE, .empty = 0, .counter = 0, .full_counter = MAX_SIZE};
+    static t_data test = {.tail = MAX_SIZE, .head = 0, .counter = 0};
     pthread_mutex_init (&test.mutex, NULL);
     sem_init(&test.empty, 0, MAX_SIZE);
     sem_init(&test.full, 0, 0);
@@ -35,6 +35,13 @@ int main(int argc, char *argv[])
         pthread_create(&pro_threads[i], NULL, producer, &test);
         pthread_create(&con_threads[i], NULL, consumer, &test);
     }
+
+    
+    /* The following section will not be used unless I figure out a graceful way to wind down the threads.
+    *    The solutions that come to mind would require stopping the threads individually and the result
+    *    would be that one would be unable to tell if the test passes because the "threads" can finish the 
+    *    work without any competition
+    */
 
     (void) sleep(1);
     i = 0;

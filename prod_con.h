@@ -10,18 +10,15 @@
 
 
 
-typedef struct Thread_data
+typedef struct t_data
 {
-    sem_t sem_empty;
-    sem_t sem_full;
     pthread_mutex_t mutex;
-    int size;
+    sem_t empty;
+    sem_t full;
     int counter;
-    int full_counter;
-    int empty;
-    int full;
-    int time_delay;
-    long buffer[MAX_SIZE];
+    int tail;
+    int head;
+    int buffer[MAX_SIZE];
 } t_data;
 
 
