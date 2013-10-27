@@ -40,8 +40,9 @@ void *producer(void *indata)
 {
     t_data *data = indata;
     
-    while(data->pro_ticker > 0)
+    while(TRUE)
     {
+        
         // int rand_variable = 1;
         // int divisor = rand_variable % 5;
         // int divisor_1 = pow(1000, divisor + 1);
@@ -52,9 +53,16 @@ void *producer(void *indata)
         if (data->counter == MAX_SIZE)
         {
             sem_wait(&data->empty);
-            fprintf(human_log_file, "Counter is at MAX_SIZE. Waiting...\n");    
-        }                
+            fprintf(human_log_file, "\n\nCounter is at MAX_SIZE. Waiting...\n\n");    
+        }  
         pthread_mutex_lock(&data->mutex);             //lock the mutex
+        if (data->pro_ticker < 1)
+        {
+            fprintf(human_log_file, "Producer Ticker is at 0; thread is finished.\n");
+            pthread_mutex_unlock(&data->mutex);             //unlock mutex
+            return NULL;
+        }              
+        
         data->buffer[data->tail] = payload;
         fprintf(test_log_file, "%d\n", payload);
         fprintf(human_log_file, "%13d was written to the data structure at x time.\n", payload);
@@ -113,8 +121,10 @@ void *producer(void *indata)
 void *consumer(void *indata) 
 {
     t_data *data = indata;
-    while(data->con_ticker > 0)
+    while(TRUE)
     {
+
+        
         // int rand_variable = 1;
         // int divisor = rand_variable % 5;
         // int divisor_1 = pow(1000, divisor + 1);
@@ -124,9 +134,15 @@ void *consumer(void *indata)
         if(data->counter == 0) 
         {
             sem_wait(&data->empty);
-            fprintf(human_log_file, "Counter is at ZERO. Waiting...\n"); 
+            fprintf(human_log_file, "\n\nCounter is at ZERO. Waiting...\n\n"); 
         }
         pthread_mutex_lock(&data->mutex);
+        if (data->con_ticker < 1)
+        {
+            fprintf(human_log_file, "Consumer Ticker is at 0; thread is finished.\n");
+            pthread_mutex_unlock(&data->mutex);
+            return NULL;
+        }
         int temp = data->buffer[data->head];
         if (temp != 0)
         {
@@ -142,7 +158,7 @@ void *consumer(void *indata)
         }
         else
         {
-            fprintf(human_log_file, "An empty cell was encountered. Unlocking and continuing.\n");
+            fprintf(human_log_file, "\nAn empty cell was encountered. Unlocking and continuing.\n\n");
         }
         pthread_mutex_unlock(&data->mutex);
         sem_post(&data->full);

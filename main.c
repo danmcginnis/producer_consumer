@@ -66,7 +66,8 @@ int main(int argc, char *argv[])
         pthread_join(pro_threads[i], NULL);
         pthread_join(con_threads[i], NULL);
     }
-    fprintf(human_log_file, "##---------------------------------------------------------------------##");
+    fprintf(human_log_file, "All %d threads have returned.\n", NUM);
+    fprintf(human_log_file, "\n\n##---------------------------------------------------------------------##\n\n");
     fclose(human_log_file);
     fclose(test_log_file);
     pthread_mutex_destroy(&test.mutex);
