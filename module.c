@@ -55,24 +55,32 @@ void *producer(void *indata)
             sem_wait(&data->empty);
             fprintf(human_log_file, "\n\nCounter is at MAX_SIZE. Waiting...\n\n");    
         }  
-        pthread_mutex_lock(&data->mutex);             //lock the mutex
+        pthread_mutex_lock(&data->mutex);             
         if (data->pro_ticker < 1)
         {
-            fprintf(human_log_file, "Producer Ticker is at 0; thread is finished.\n");
-            pthread_mutex_unlock(&data->mutex);             //unlock mutex
+            //fprintf(human_log_file, "Producer Ticker is at 0; thread is finished.\n");
+            pthread_mutex_unlock(&data->mutex);          
             return NULL;
         }              
         
-        data->buffer[data->tail] = payload;
+        if (!(data->buffer[data->tail] = payload))
+        {
+            fprintf(human_log_file, "Error writing to buffer!\n");
+            pthread_mutex_unlock(&data->mutex);             
+            sem_post(&data->full);
+            return NULL;
+        }
+        gettimeofday(&current, NULL);
+        temp_time.tv_usec = current.tv_usec + (1000000 - start.tv_usec);
         fprintf(test_log_file, "%d\n", payload);
-        fprintf(human_log_file, "%13d was written to the data structure at x time.\n", payload);
+        fprintf(human_log_file, "%13d was written to the data structure at %ld microseconds.\n", payload, temp_time.tv_usec);
         fprintf(human_log_file, "\tProducer tail = %d", data->tail);
         fprintf(human_log_file, "\tCounter = %d", data->counter);
         fprintf(human_log_file, "\tProducer ticker count = %d\n", data->pro_ticker);
         data->tail = (data->tail + 1) % MAX_SIZE;
         data->counter++;
         data->pro_ticker--;
-        pthread_mutex_unlock(&data->mutex);             //unlock mutex
+        pthread_mutex_unlock(&data->mutex);            
         sem_post(&data->full);
     }
     return NULL;
@@ -124,7 +132,7 @@ void *consumer(void *indata)
     while(TRUE)
     {
 
-        
+        int temp = 0;
         // int rand_variable = 1;
         // int divisor = rand_variable % 5;
         // int divisor_1 = pow(1000, divisor + 1);
@@ -139,16 +147,24 @@ void *consumer(void *indata)
         pthread_mutex_lock(&data->mutex);
         if (data->con_ticker < 1)
         {
-            fprintf(human_log_file, "Consumer Ticker is at 0; thread is finished.\n");
+            //fprintf(human_log_file, "Consumer Ticker is at 0; thread is finished.\n");
             pthread_mutex_unlock(&data->mutex);
             return NULL;
         }
-        int temp = data->buffer[data->head];
+        if (!(temp = data->buffer[data->head]))
+        {
+            fprintf(human_log_file, "Error reading from buffer!\n");
+            pthread_mutex_unlock(&data->mutex);             
+            sem_post(&data->full);
+            return NULL;
+        }
         if (temp != 0)
         {
-            data->buffer[data->head] = NULL;
+            data->buffer[data->head] = 0;
+            gettimeofday(&current, NULL);
+            temp_time.tv_usec = current.tv_usec + (1000000 - start.tv_usec);
             fprintf(test_log_file, "%d\n", temp);
-            fprintf(human_log_file, "%13d was removed from the data structure at x time.\n", temp /*, time_stamp.tv_nsec*/);
+            fprintf(human_log_file, "%13d was removed from the data structure at %ld microseconds.\n", temp, temp_time.tv_usec);
             fprintf(human_log_file, "\tConsumer head = %d", data->head);
             fprintf(human_log_file, "\tCounter = %d", data->counter);
             fprintf(human_log_file, "\tConsumer ticker count = %d\n", data->con_ticker);

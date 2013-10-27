@@ -2,7 +2,7 @@
 
 #define NUM 200
 #define THREAD_COUNT 2
-#define TICKER 2000
+#define TICKER 20
 
 
 
@@ -12,15 +12,17 @@
 int main(int argc, char *argv[])
 {
 
-    // if (argc < 4)
+    // if (argc < 3)
     // {
-    //     printf("Proper usage: \n");
-    //     printf("pc "number of producer threads" " number of consumer threads" "delay between threads"\n");
+    //     printf("Proper usage: \npc "number of producer threads" " number of consumer threads"\n");
     //     return 0;
     // } 
     // int num_pro_threads = atoi(argv[1]);
     // int num_con_threads = atoi(argv[2]);
-    // int Time_delay = atoi(argv[3]);
+
+    
+    
+    //clock_gettime(CLOCK_REALTIME,&start);
 
     if ((test_log_file = fopen("test_log_file", "w")) == NULL)
     {
@@ -35,6 +37,7 @@ int main(int argc, char *argv[])
     }
 
     static t_data test = {.tail = 0, .head = 0, .counter = 0, .pro_ticker = TICKER, .con_ticker = TICKER};
+    gettimeofday(&start, NULL);
     pthread_mutex_init (&test.mutex, NULL);
     sem_init(&test.empty, 0, MAX_SIZE);
     sem_init(&test.full, 0, 0);
@@ -47,7 +50,7 @@ int main(int argc, char *argv[])
     pthread_t con_threads[NUM];
 
     int i = 0;
-    for (i; i < NUM; i++)
+    for (i = 0; i < NUM; i++)
     {
         pthread_create(&pro_threads[i], NULL, producer, &test);
         pthread_create(&con_threads[i], NULL, consumer, &test);
@@ -60,14 +63,16 @@ int main(int argc, char *argv[])
     */
 
     (void) sleep(1);
-    i = 0;
-    for (i; i < NUM; i++) 
+    
+    for (i = 0; i < NUM; i++) 
     {
         pthread_join(pro_threads[i], NULL);
         pthread_join(con_threads[i], NULL);
     }
     fprintf(human_log_file, "All %d threads have returned.\n", NUM);
-    fprintf(human_log_file, "\n\n##---------------------------------------------------------------------##\n\n");
+    time_t clk = time(NULL);
+    fprintf(human_log_file, "Log File closed at %s\n", ctime(&clk));
+    fprintf(human_log_file, "##---------------------------------------------------------------------##\n");
     fclose(human_log_file);
     fclose(test_log_file);
     pthread_mutex_destroy(&test.mutex);

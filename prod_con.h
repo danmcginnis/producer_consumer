@@ -13,8 +13,13 @@
 FILE *human_log_file;
 FILE *test_log_file;
 
+struct timeval start;
+struct timeval current;
+struct timeval temp_time;
+
 typedef struct t_data
 {
+    
     pthread_mutex_t mutex;
     sem_t empty;
     sem_t full;
