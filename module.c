@@ -3,6 +3,43 @@
 
 
 
+/* struct timeval time_stamp(struct timeval start, struct timeval current)
+ * 
+ * This function takes two microsecond values and returns the difference. The
+ *  function takes into account that the value may "roll over" before the
+ *  difference is calculated. This function is based very heavily on the 
+ *  following post on Stack Overflow: http://stackoverflow.com/a/10487325/738842
+ *
+ * Input:
+ *      Two timeval structs.
+ *
+ * Output:
+ *      A timeval struct representing the difference between the two input
+ *          in microseconds [one millionth of a second].
+ *
+ * Modifies:
+ *      none
+ *
+ * Assumptions:
+ *      There is valid data in both input variables.
+ *      The time gap being calculated is of a size that is reasonably
+ *          represented in microseconds [ i.e. less an several minutes].
+*/
+struct timeval time_stamp(struct timeval start, struct timeval current)
+{
+    struct timeval temp;
+    temp.tv_usec = current.tv_usec + (1000000 - start.tv_usec);
+    while(temp.tv_usec > 1000000)
+    {
+        temp.tv_usec -= 1000000;
+    }
+
+    return temp;
+}
+
+
+
+
 /*
  * void *producer(void *indata)
  *
@@ -71,9 +108,9 @@ void *producer(void *indata)
             return NULL;
         }
         gettimeofday(&current, NULL);
-        temp_time.tv_usec = current.tv_usec + (1000000 - start.tv_usec);
-        fprintf(test_log_file, "%d\n", payload);
-        fprintf(human_log_file, "%13d was written to the data structure at %ld microseconds.\n", payload, temp_time.tv_usec);
+        temp_time = time_stamp(start, current);
+        fprintf(log_file, "%d\n", payload);
+        fprintf(human_log_file, "%13d was written to the data structure at %d microseconds.\n", payload, temp_time.tv_usec);
         fprintf(human_log_file, "\tProducer tail = %d", data->tail);
         fprintf(human_log_file, "\tCounter = %d", data->counter);
         fprintf(human_log_file, "\tProducer ticker count = %d\n", data->pro_ticker);
@@ -162,9 +199,9 @@ void *consumer(void *indata)
         {
             data->buffer[data->head] = 0;
             gettimeofday(&current, NULL);
-            temp_time.tv_usec = current.tv_usec + (1000000 - start.tv_usec);
-            fprintf(test_log_file, "%d\n", temp);
-            fprintf(human_log_file, "%13d was removed from the data structure at %ld microseconds.\n", temp, temp_time.tv_usec);
+            temp_time = time_stamp(start, current);
+            fprintf(log_file, "%d\n", temp);
+            fprintf(human_log_file, "%13d was removed from the data structure at %d microseconds.\n", temp, temp_time.tv_usec);
             fprintf(human_log_file, "\tConsumer head = %d", data->head);
             fprintf(human_log_file, "\tCounter = %d", data->counter);
             fprintf(human_log_file, "\tConsumer ticker count = %d\n", data->con_ticker);
@@ -198,9 +235,6 @@ void *consumer(void *indata)
 
 //             *full = (*full) - 1;
 //             i--;
-
-
-
 
 
 

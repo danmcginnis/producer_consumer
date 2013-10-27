@@ -1,8 +1,8 @@
 #include "prod_con.h"
 
-#define NUM 200
+#define NUM 4096
 #define THREAD_COUNT 2
-#define TICKER 20
+#define TICKER 2000000              //must be much bigger than thread count otherwise each thread only runs once.
 
 
 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     
     //clock_gettime(CLOCK_REALTIME,&start);
 
-    if ((test_log_file = fopen("test_log_file", "w")) == NULL)
+    if ((log_file = fopen("log_file", "w")) == NULL)
     {
         printf("Cannot open log file!");
         exit(1);
@@ -36,13 +36,13 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    static t_data test = {.tail = 0, .head = 0, .counter = 0, .pro_ticker = TICKER, .con_ticker = TICKER};
+    static t_data lab_3 = {.tail = 0, .head = 0, .counter = 0, .pro_ticker = TICKER, .con_ticker = TICKER};
     gettimeofday(&start, NULL);
-    pthread_mutex_init (&test.mutex, NULL);
-    sem_init(&test.empty, 0, MAX_SIZE);
-    sem_init(&test.full, 0, 0);
+    pthread_mutex_init (&lab_3.mutex, NULL);
+    sem_init(&lab_3.empty, 0, MAX_SIZE);
+    sem_init(&lab_3.full, 0, 0);
 
-    memset(test.buffer, 0, MAX_SIZE);           //to zero out array initially
+    memset(lab_3.buffer, 0, MAX_SIZE);           //to zero out array initially
 
     srandom(time(NULL));                        //random is preferred over rand
    
@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
     int i = 0;
     for (i = 0; i < NUM; i++)
     {
-        pthread_create(&pro_threads[i], NULL, producer, &test);
-        pthread_create(&con_threads[i], NULL, consumer, &test);
+        pthread_create(&pro_threads[i], NULL, producer, &lab_3);
+        pthread_create(&con_threads[i], NULL, consumer, &lab_3);
     }
 
     
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     fprintf(human_log_file, "Log File closed at %s\n", ctime(&clk));
     fprintf(human_log_file, "##---------------------------------------------------------------------##\n");
     fclose(human_log_file);
-    fclose(test_log_file);
-    pthread_mutex_destroy(&test.mutex);
+    fclose(log_file);
+    pthread_mutex_destroy(&lab_3.mutex);
     return 0;
 }

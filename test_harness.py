@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-
 # Usage:
 # 
 #   python3 test_harness.py log_file
@@ -22,7 +21,8 @@
 #   If python3 is located at the path listed above this file can be made
 #   executable and run without the python3 call before hand.
 #
-#
+
+
 from sys import exit
 from sys import argv
 from collections import Counter
@@ -66,7 +66,6 @@ for value in sorted(payload, key=payload.get, reverse=False):
 #print()
 #print(sp, "unique sets of numbers were entered.")
 #print(wc, "lines were encountered")
-
 
 if uni > 0:
     print("Test Failure! ---> ",  uni, " unique numbers were encountered.")
