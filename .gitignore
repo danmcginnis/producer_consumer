@@ -3,6 +3,9 @@ pc
 test
 out
 temp
+fib_state.c
+human_log_file
+test_log_file
 
 # Object files
 *.o

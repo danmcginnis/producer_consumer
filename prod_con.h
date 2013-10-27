@@ -10,7 +10,8 @@
 #define MAX_SIZE 100000000
 #define RUN_TIME 10
 
-
+FILE *human_log_file;
+FILE *test_log_file;
 
 typedef struct t_data
 {

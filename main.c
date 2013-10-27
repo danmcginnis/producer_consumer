@@ -5,6 +5,10 @@
 #define TICKER 2000
 
 
+
+
+
+
 int main(int argc, char *argv[])
 {
 
@@ -17,6 +21,18 @@ int main(int argc, char *argv[])
     // int num_pro_threads = atoi(argv[1]);
     // int num_con_threads = atoi(argv[2]);
     // int Time_delay = atoi(argv[3]);
+
+    if ((test_log_file = fopen("test_log_file", "w")) == NULL)
+    {
+        printf("Cannot open log file!");
+        exit(1);
+    }
+
+    if ((human_log_file = fopen("human_log_file", "a+")) == NULL)
+    {
+        printf("Cannot open log file!");
+        exit(1);
+    }
 
     static t_data test = {.tail = 0, .head = 0, .counter = 0, .pro_ticker = TICKER, .con_ticker = TICKER};
     pthread_mutex_init (&test.mutex, NULL);
@@ -50,7 +66,9 @@ int main(int argc, char *argv[])
         pthread_join(pro_threads[i], NULL);
         pthread_join(con_threads[i], NULL);
     }
-    
+    fprintf(human_log_file, "##---------------------------------------------------------------------##");
+    fclose(human_log_file);
+    fclose(test_log_file);
     pthread_mutex_destroy(&test.mutex);
     return 0;
 }

@@ -51,14 +51,16 @@ void *producer(void *indata)
         int payload = random();                      //produce item
         if (data->counter == MAX_SIZE)
         {
-            sem_wait(&data->empty);    
+            sem_wait(&data->empty);
+            fprintf(human_log_file, "Counter is at MAX_SIZE. Waiting...\n");    
         }                
         pthread_mutex_lock(&data->mutex);             //lock the mutex
         data->buffer[data->tail] = payload;
-        printf("%15d was written to the data structure at x time.\n", payload);
-        //printf("\tProducer tail = %d", data->tail);
-        //printf("\tCounter = %d\n", data->counter);
-        //printf("pro Ticker = %d\n", data->pro_ticker);
+        fprintf(test_log_file, "%d\n", payload);
+        fprintf(human_log_file, "%13d was written to the data structure at x time.\n", payload);
+        fprintf(human_log_file, "\tProducer tail = %d", data->tail);
+        fprintf(human_log_file, "\tCounter = %d", data->counter);
+        fprintf(human_log_file, "\tProducer ticker count = %d\n", data->pro_ticker);
         data->tail = (data->tail + 1) % MAX_SIZE;
         data->counter++;
         data->pro_ticker--;
@@ -122,18 +124,25 @@ void *consumer(void *indata)
         if(data->counter == 0) 
         {
             sem_wait(&data->empty);
+            fprintf(human_log_file, "Counter is at ZERO. Waiting...\n"); 
         }
         pthread_mutex_lock(&data->mutex);
         int temp = data->buffer[data->head];
         if (temp != 0)
         {
             data->buffer[data->head] = NULL;
-            printf("%15d was removed from the data structure at x time.\n", temp /*, time_stamp.tv_nsec*/);
-            //printf("\tConsumer head = %d", data->head);
-            //printf("\tCounter = %d\n", data->counter);
+            fprintf(test_log_file, "%d\n", temp);
+            fprintf(human_log_file, "%13d was removed from the data structure at x time.\n", temp /*, time_stamp.tv_nsec*/);
+            fprintf(human_log_file, "\tConsumer head = %d", data->head);
+            fprintf(human_log_file, "\tCounter = %d", data->counter);
+            fprintf(human_log_file, "\tConsumer ticker count = %d\n", data->con_ticker);
             data->head = (data->head + 1) % MAX_SIZE;
             data->counter--;
             data->con_ticker--;
+        }
+        else
+        {
+            fprintf(human_log_file, "An empty cell was encountered. Unlocking and continuing.\n");
         }
         pthread_mutex_unlock(&data->mutex);
         sem_post(&data->full);
