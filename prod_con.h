@@ -7,7 +7,7 @@
 #include <math.h>
 
 #define TRUE 1
-#define MAX_SIZE 1000000
+#define MAX_SIZE 100000000
 #define RUN_TIME 10
 
 
@@ -17,6 +17,8 @@ typedef struct t_data
     pthread_mutex_t mutex;
     sem_t empty;
     sem_t full;
+    int pro_ticker;
+    int con_ticker;
     int counter;
     int tail;
     int head;

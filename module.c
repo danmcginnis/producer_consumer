@@ -40,7 +40,7 @@ void *producer(void *indata)
 {
     t_data *data = indata;
     
-    while(TRUE)
+    while(data->pro_ticker > 0)
     {
         // int rand_variable = 1;
         // int divisor = rand_variable % 5;
@@ -56,10 +56,12 @@ void *producer(void *indata)
         pthread_mutex_lock(&data->mutex);             //lock the mutex
         data->buffer[data->tail] = payload;
         printf("%15d was written to the data structure at x time.\n", payload);
-        printf("\tProducer tail = %d", data->tail);
-        printf("\tCounter = %d\n", data->counter);
+        //printf("\tProducer tail = %d", data->tail);
+        //printf("\tCounter = %d\n", data->counter);
+        //printf("pro Ticker = %d\n", data->pro_ticker);
         data->tail = (data->tail + 1) % MAX_SIZE;
         data->counter++;
+        data->pro_ticker--;
         pthread_mutex_unlock(&data->mutex);             //unlock mutex
         sem_post(&data->full);
     }
@@ -109,7 +111,7 @@ void *producer(void *indata)
 void *consumer(void *indata) 
 {
     t_data *data = indata;
-    while(TRUE)
+    while(data->con_ticker > 0)
     {
         // int rand_variable = 1;
         // int divisor = rand_variable % 5;
@@ -127,10 +129,11 @@ void *consumer(void *indata)
         {
             data->buffer[data->head] = NULL;
             printf("%15d was removed from the data structure at x time.\n", temp /*, time_stamp.tv_nsec*/);
-            printf("\tConsumer head = %d", data->head);
-            printf("\tCounter = %d\n", data->counter);
+            //printf("\tConsumer head = %d", data->head);
+            //printf("\tCounter = %d\n", data->counter);
             data->head = (data->head + 1) % MAX_SIZE;
             data->counter--;
+            data->con_ticker--;
         }
         pthread_mutex_unlock(&data->mutex);
         sem_post(&data->full);
