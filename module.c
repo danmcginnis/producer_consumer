@@ -79,13 +79,7 @@ void *producer(void *indata)
     
     while(TRUE)
     {
-        
-        // int rand_variable = 1;
-        // int divisor = rand_variable % 5;
-        // int divisor_1 = pow(1000, divisor + 1);
-        // sleep(random()/1000000000 * divisor_1);
-        // rand_variable++;
-        sleep(random()/100000000000);
+        sleep(random()/100000000);                      //generates a sleep from 0 to 21
         int payload = random();                      //produce item
         if (data->counter == MAX_SIZE)
         {
@@ -170,12 +164,7 @@ void *consumer(void *indata)
     {
 
         int temp = 0;
-        // int rand_variable = 1;
-        // int divisor = rand_variable % 5;
-        // int divisor_1 = pow(1000, divisor + 1);
-        // sleep(random()/1000000000 * divisor_1);
-        // rand_variable++;
-        sleep(random()/100000000000);
+        sleep(random()/100000000);                      //generates a sleep from 0 to 21
         if(data->counter == 0) 
         {
             sem_wait(&data->empty);
