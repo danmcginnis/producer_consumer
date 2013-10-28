@@ -1,28 +1,29 @@
 #include "prod_con.h"
 
-#define NUM 4096
-#define THREAD_COUNT 2
-#define TICKER 2000000              //must be much bigger than thread count otherwise each thread only runs once.
-
-
-
-
-
-
 int main(int argc, char *argv[])
 {
 
-    // if (argc < 3)
-    // {
-    //     printf("Proper usage: \npc "number of producer threads" " number of consumer threads"\n");
-    //     return 0;
-    // } 
-    // int num_pro_threads = atoi(argv[1]);
-    // int num_con_threads = atoi(argv[2]);
+    if (argc < 3)
+    {
+         printf("Proper usage: \npc number of producer threads  number of consumer threads\n");
+         exit(1);
+    } 
+    int num_pro_threads = atoi(argv[1]);
+    int num_con_threads = atoi(argv[2]);
 
+    if ((num_pro_threads < 2) || (num_pro_threads > 1024))
+    {
+        printf("Please enter a reasonable number of producer threads\n");
+        exit(1);
+    }
+
+    if ((num_con_threads < 2) || (num_con_threads > 1024))
+    {
+        printf("Please enter a reasonable number of consumer threads\n");
+        exit(1);
+    }
     
-    
-    //clock_gettime(CLOCK_REALTIME,&start);
+
 
     if ((log_file = fopen("log_file", "w")) == NULL)
     {
@@ -46,13 +47,19 @@ int main(int argc, char *argv[])
 
     srandom(time(NULL));                        //random is preferred over rand
    
-    pthread_t pro_threads[NUM];
-    pthread_t con_threads[NUM];
+    pthread_t pro_threads[num_pro_threads];
+    pthread_t con_threads[num_con_threads];
 
     int i = 0;
-    for (i = 0; i < NUM; i++)
+    for (i = 0; i < num_pro_threads; i++)
     {
         pthread_create(&pro_threads[i], NULL, producer, &lab_3);
+        //pthread_create(&con_threads[i], NULL, consumer, &lab_3);
+    }
+
+    for (i = 0; i < num_con_threads; i++)
+    {
+        //pthread_create(&pro_threads[i], NULL, producer, &lab_3);
         pthread_create(&con_threads[i], NULL, consumer, &lab_3);
     }
 
@@ -64,12 +71,18 @@ int main(int argc, char *argv[])
 
     (void) sleep(1);
     
-    for (i = 0; i < NUM; i++) 
+    for (i = 0; i < num_pro_threads; i++) 
     {
         pthread_join(pro_threads[i], NULL);
+        //pthread_join(con_threads[i], NULL);
+    }
+
+    for (i = 0; i < num_con_threads; i++) 
+    {
+        //pthread_join(pro_threads[i], NULL);
         pthread_join(con_threads[i], NULL);
     }
-    fprintf(human_log_file, "All %d threads have returned.\n", NUM);
+    fprintf(human_log_file, "All %d threads have returned.\n", (num_pro_threads + num_con_threads));
     time_t clk = time(NULL);
     fprintf(human_log_file, "Log File closed at %s\n", ctime(&clk));
     fprintf(human_log_file, "##---------------------------------------------------------------------##\n");

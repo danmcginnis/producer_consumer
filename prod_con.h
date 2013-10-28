@@ -8,8 +8,8 @@
 #include <unistd.h>
 
 #define TRUE 1
-#define MAX_SIZE 100000000
-#define RUN_TIME 10
+#define MAX_SIZE 100000000          //The buffer size didn't appear to change the program behavior once it got above 100.
+#define TICKER 2000000              //must be much bigger than thread count otherwise each thread only runs once.
 
 FILE *human_log_file;
 FILE *log_file;
@@ -19,8 +19,7 @@ struct timeval current;
 struct timeval temp_time;
 
 typedef struct t_data
-{
-    
+{ 
     pthread_mutex_t mutex;
     sem_t empty;
     sem_t full;
@@ -37,7 +36,3 @@ void print_array(int data[], int size);
 void *producer(void *indata);
 void *consumer(void *indata);
 struct timeval time_stamp(struct timeval start, struct timeval current);
-
-//int clock_gettime(clockid_t clk_id, struct timespect *tp); //per http://www.guyrutenberg.com/2007/09/22/profiling-code-using-clock_gettime/
-
-
