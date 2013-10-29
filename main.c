@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
     
-
+    int ticker = (num_con_threads + num_pro_threads) * 5;
 
     if ((log_file = fopen("log_file", "w")) == NULL)
     {
@@ -37,7 +37,9 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    static t_data lab_3 = {.tail = 0, .head = 0, .counter = 0, .pro_ticker = TICKER, .con_ticker = TICKER};
+    static t_data lab_3 = {.tail = MAX_SIZE-1, .head = 0, .counter = 0,};
+    lab_3.pro_ticker = ticker;                      //since ticker isn't a static variable, it can't be assigned above
+    lab_3.con_ticker = ticker * 10;
     gettimeofday(&start, NULL);
     pthread_mutex_init (&lab_3.mutex, NULL);
     sem_init(&lab_3.empty, 0, MAX_SIZE);
@@ -51,17 +53,19 @@ int main(int argc, char *argv[])
     pthread_t con_threads[num_con_threads];
 
     int i = 0;
-    for (i = 0; i < num_pro_threads; i++)
+    for (i = 0; i < num_con_threads; i++)
     {
         pthread_create(&pro_threads[i], NULL, producer, &lab_3);
         //pthread_create(&con_threads[i], NULL, consumer, &lab_3);
     }
 
-    for (i = 0; i < num_con_threads; i++)
+    for (i = 0; i < num_pro_threads; i++)
     {
         //pthread_create(&pro_threads[i], NULL, producer, &lab_3);
         pthread_create(&con_threads[i], NULL, consumer, &lab_3);
     }
+
+    
 
     
     /* The large buffer size combined with a large number of threads makes visual inspection
