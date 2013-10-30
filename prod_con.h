@@ -22,9 +22,6 @@ typedef struct t_data
     pthread_mutex_t mutex;
     sem_t empty;
     sem_t full;
-    int read_count;
-    int pro_ticker;
-    int con_ticker;
     int counter;
     int tail;
     int head;

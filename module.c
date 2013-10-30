@@ -46,7 +46,6 @@ struct timeval time_stamp(struct timeval start, struct timeval current)
     {
         temp.tv_usec -= 1000000;
     }
-
     return temp;
 }
 
@@ -92,22 +91,16 @@ void *producer(void *indata)
     
     while(TRUE)
     {
-        sleep(random()/100000000000);                      //generates a sleep from 0 to 21
-        int payload = random();                          //produce item
+        sleep(random()/1000000000);                        //generates a sleep from 0 to 21
+        int payload = random();                              //produce item
         if (data->counter == MAX_SIZE)
         {
             sem_wait(&data->empty);
             fprintf(human_log_file, "\n\nCounter is at MAX_SIZE. Waiting...\n\n");    
         }  
         pthread_mutex_lock(&data->mutex);             
-        // if (data->pro_ticker < 1)
-        // {
-        //     //fprintf(human_log_file, "Producer Ticker is at 0; thread is finished.\n");
-        //     pthread_mutex_unlock(&data->mutex);          
-        //     return NULL;
-        // }         
         
-        
+
         if (data->buffer[data->tail] == 0)
         {
             if(!(data->buffer[data->tail] = payload))
@@ -123,32 +116,22 @@ void *producer(void *indata)
             fprintf(log_file, "%d\n", payload);
             fprintf(human_log_file, "%13d was written to the data structure at %d microseconds.\n", payload, temp_time.tv_usec);
             fprintf(human_log_file, "\tProducer tail = %d", data->tail);
-            fprintf(human_log_file, "\tCounter = %d", data->counter);
-            fprintf(human_log_file, "\tProducer ticker count = %d\n", data->pro_ticker);
-            data->tail = mod((data->tail - 1),  MAX_SIZE);
+            fprintf(human_log_file, "\tCounter = %d\n", data->counter);
             data->counter++;
-
-            
         }
 
         else
         {
             fprintf(human_log_file, "An written but not read cell was encountered. Logging, unlocking, and continuing.\n");
-            fprintf(human_log_file, "\t Producer tail = %d", data->tail);
+            fprintf(human_log_file, "\tProducer tail = %d", data->tail);
             fprintf(human_log_file, "\tbuffer value = %d\n", data->buffer[data->tail]);
-            data->tail = mod((data->tail - 1),  MAX_SIZE);
         }
-        //data->pro_ticker--;
+        data->tail = mod((data->tail - 1),  MAX_SIZE);
         pthread_mutex_unlock(&data->mutex);            
         sem_post(&data->full);
     }
     return NULL;
 }
-
-
-
-
-
 
 
 
@@ -192,19 +175,14 @@ void *consumer(void *indata)
     {
 
         int temp = 0;
-        sleep(random()/100000000000);                      //generates a sleep from 0 to 21
+        sleep(random()/1000000000);                      //generates a sleep from 0 to 21
         if(data->counter == 0) 
         {
             sem_wait(&data->empty);
             fprintf(human_log_file, "\n\nCounter is at ZERO. Waiting...\n\n"); 
         }
         pthread_mutex_lock(&data->mutex);
-        // if ((data->con_ticker < 0) || (data->read_count < 0))
-        // {
-        //     //fprintf(human_log_file, "Consumer Ticker is at 0; thread is finished.\n");
-        //     pthread_mutex_unlock(&data->mutex);
-        //     return NULL;
-        // }
+
         temp = data->buffer[data->head];
         
         if (temp == 0)
@@ -214,7 +192,7 @@ void *consumer(void *indata)
             fprintf(human_log_file, "\tbuffer value = %d\n", data->buffer[data->head]);
             
         }
-        else //if (temp != 0) 
+        else 
         {
             data->buffer[data->head] = 0;
             gettimeofday(&current, NULL);
@@ -222,13 +200,10 @@ void *consumer(void *indata)
             fprintf(log_file, "%d\n", temp);
             fprintf(human_log_file, "%13d was removed from the data structure at %d microseconds.\n", temp, temp_time.tv_usec);
             fprintf(human_log_file, "\tConsumer head = %d", data->head);
-            fprintf(human_log_file, "\tCounter = %d", data->counter);
-            fprintf(human_log_file, "\tConsumer ticker count = %d\n", data->con_ticker);
+            fprintf(human_log_file, "\tCounter = %d\n", data->counter);
             data->counter--;
-            
-            
         }
-        //data->con_ticker--;
+        
         data->head = mod((data->head + 1), MAX_SIZE);
         pthread_mutex_unlock(&data->mutex);
         sem_post(&data->full);

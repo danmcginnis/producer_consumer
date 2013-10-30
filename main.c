@@ -2,7 +2,6 @@
 
 int main(int argc, char *argv[])
 {
-
     if (argc < 3)
     {
          printf("Proper usage: \npc number of producer threads  number of consumer threads\n");
@@ -23,8 +22,6 @@ int main(int argc, char *argv[])
         exit(1);
     }
     
-    int ticker = (num_con_threads + num_pro_threads) * 5;
-
     if ((log_file = fopen("log_file", "w")) == NULL)
     {
         printf("Cannot open log file!");
@@ -37,9 +34,8 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    static t_data lab_3 = {.tail = MAX_SIZE-1, .head = 0, .counter = 0,};
-    lab_3.pro_ticker = ticker;                      //since ticker isn't a static variable, it can't be assigned above
-    lab_3.con_ticker = ticker * 5;
+    static t_data lab_3 = {.tail = MAX_SIZE-1, .head = 0, .counter = 0};
+    
     gettimeofday(&start, NULL);
     pthread_mutex_init (&lab_3.mutex, NULL);
     sem_init(&lab_3.empty, 0, MAX_SIZE);
@@ -53,24 +49,21 @@ int main(int argc, char *argv[])
     pthread_t con_threads[num_con_threads];
 
     int i = 0;
+
     for (i = 0; i < num_con_threads; i++)
     {
-        pthread_create(&pro_threads[i], NULL, producer, &lab_3);
-        //pthread_create(&con_threads[i], NULL, consumer, &lab_3);
+        pthread_create(&con_threads[i], NULL, consumer, &lab_3);
     }
 
     for (i = 0; i < num_pro_threads; i++)
     {
-        //pthread_create(&pro_threads[i], NULL, producer, &lab_3);
-        pthread_create(&con_threads[i], NULL, consumer, &lab_3);
+        pthread_create(&pro_threads[i], NULL, producer, &lab_3);
+        
     }
 
-    
-
-    
     /* The large buffer size combined with a large number of threads makes visual inspection
-    *   of the output difficult. The following section will gracefully shut down the program
-    *   to allow the output to be written to a file and inspected programatically.
+    *   of the output difficult. The following section exist to gracefully shut down the program
+    *   if functionality to wind down the threads is added. Currently CTRL-C is used to terminate.
     */
 
     (void) sleep(1);
@@ -78,14 +71,13 @@ int main(int argc, char *argv[])
     for (i = 0; i < num_pro_threads; i++) 
     {
         pthread_join(pro_threads[i], NULL);
-        //pthread_join(con_threads[i], NULL);
     }
 
     for (i = 0; i < num_con_threads; i++) 
     {
-        //pthread_join(pro_threads[i], NULL);
         pthread_join(con_threads[i], NULL);
     }
+
     fprintf(human_log_file, "All %d threads have returned.\n", (num_pro_threads + num_con_threads));
     time_t clk = time(NULL);
     fprintf(human_log_file, "Log File closed at %s\n", ctime(&clk));
