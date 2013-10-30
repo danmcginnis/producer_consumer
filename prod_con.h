@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 #define TRUE 1
-#define MAX_SIZE 10         
+#define MAX_SIZE 1000         
 
 FILE *human_log_file;
 FILE *log_file;

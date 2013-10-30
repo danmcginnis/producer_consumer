@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     static t_data lab_3 = {.tail = MAX_SIZE-1, .head = 0, .counter = 0,};
     lab_3.pro_ticker = ticker;                      //since ticker isn't a static variable, it can't be assigned above
-    lab_3.con_ticker = ticker * 10;
+    lab_3.con_ticker = ticker * 5;
     gettimeofday(&start, NULL);
     pthread_mutex_init (&lab_3.mutex, NULL);
     sem_init(&lab_3.empty, 0, MAX_SIZE);

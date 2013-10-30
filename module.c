@@ -92,7 +92,7 @@ void *producer(void *indata)
     
     while(TRUE)
     {
-        sleep(random()/1000000000);                      //generates a sleep from 0 to 21
+        sleep(random()/100000000000);                      //generates a sleep from 0 to 21
         int payload = random();                          //produce item
         if (data->counter == MAX_SIZE)
         {
@@ -192,7 +192,7 @@ void *consumer(void *indata)
     {
 
         int temp = 0;
-        sleep(random()/1000000000);                      //generates a sleep from 0 to 21
+        sleep(random()/100000000000);                      //generates a sleep from 0 to 21
         if(data->counter == 0) 
         {
             sem_wait(&data->empty);

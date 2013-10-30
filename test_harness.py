@@ -68,6 +68,7 @@ for value in sorted(payload, key=payload.get, reverse=False):
 #print(wc, "lines were encountered")
 
 if uni > 0:
+#if uni > (wc * 0.10): 
     print("Test Failure! ---> ",  uni, " unique numbers were encountered.")
 else:
     print("Test Success!")
