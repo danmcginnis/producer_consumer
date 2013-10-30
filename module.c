@@ -100,12 +100,12 @@ void *producer(void *indata)
             fprintf(human_log_file, "\n\nCounter is at MAX_SIZE. Waiting...\n\n");    
         }  
         pthread_mutex_lock(&data->mutex);             
-        if (data->pro_ticker < 1)
-        {
-            //fprintf(human_log_file, "Producer Ticker is at 0; thread is finished.\n");
-            pthread_mutex_unlock(&data->mutex);          
-            return NULL;
-        }         
+        // if (data->pro_ticker < 1)
+        // {
+        //     //fprintf(human_log_file, "Producer Ticker is at 0; thread is finished.\n");
+        //     pthread_mutex_unlock(&data->mutex);          
+        //     return NULL;
+        // }         
         
         
         if (data->buffer[data->tail] == 0)
@@ -138,7 +138,7 @@ void *producer(void *indata)
             fprintf(human_log_file, "\tbuffer value = %d\n", data->buffer[data->tail]);
             data->tail = mod((data->tail - 1),  MAX_SIZE);
         }
-        data->pro_ticker--;
+        //data->pro_ticker--;
         pthread_mutex_unlock(&data->mutex);            
         sem_post(&data->full);
     }
@@ -199,12 +199,12 @@ void *consumer(void *indata)
             fprintf(human_log_file, "\n\nCounter is at ZERO. Waiting...\n\n"); 
         }
         pthread_mutex_lock(&data->mutex);
-        if ((data->con_ticker < 0) || (data->read_count < 0))
-        {
-            //fprintf(human_log_file, "Consumer Ticker is at 0; thread is finished.\n");
-            pthread_mutex_unlock(&data->mutex);
-            return NULL;
-        }
+        // if ((data->con_ticker < 0) || (data->read_count < 0))
+        // {
+        //     //fprintf(human_log_file, "Consumer Ticker is at 0; thread is finished.\n");
+        //     pthread_mutex_unlock(&data->mutex);
+        //     return NULL;
+        // }
         temp = data->buffer[data->head];
         
         if (temp == 0)
@@ -228,7 +228,7 @@ void *consumer(void *indata)
             
             
         }
-        data->con_ticker--;
+        //data->con_ticker--;
         data->head = mod((data->head + 1), MAX_SIZE);
         pthread_mutex_unlock(&data->mutex);
         sem_post(&data->full);

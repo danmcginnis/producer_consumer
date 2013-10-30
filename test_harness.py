@@ -60,15 +60,15 @@ for value in sorted(payload, key=payload.get, reverse=False):
             #print(value, "has been found", payload[value], "times.")
             pass            #no op to allow to maintain if/else structure
     else:
-        print(value, '=>', payload[value])
+        #print(value, '=>', payload[value])
         uni += 1
 
 #print()
 #print(sp, "unique sets of numbers were entered.")
 #print(wc, "lines were encountered")
 
-if uni > 0:
-#if uni > (wc * 0.10): 
+#if uni > 0:
+if uni > (wc * 0.01): 
     print("Test Failure! ---> ",  uni, " unique numbers were encountered.")
 else:
     print("Test Success!")
