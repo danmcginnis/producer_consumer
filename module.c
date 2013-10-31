@@ -74,8 +74,7 @@ struct timeval time_stamp(struct timeval start, struct timeval current)
 
 
 
-/*
- * void *producer(void *indata)
+/* void *producer(void *indata)
  *
  * This function accepts a void pointer to a struct as the input. The struct 
  *      is recast as type t_data before and work is done on it. 
@@ -156,8 +155,7 @@ void *producer(void *indata)
 
 
 
-/*
- * void consumer(void *indata)
+/* void consumer(void *indata)
  *
  * This function accepts a void pointer to a struct as the input. The struct 
  *      is recast as type t_data before and work is done on it. 
