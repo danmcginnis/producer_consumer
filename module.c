@@ -1,14 +1,36 @@
 #include "prod_con.h"
 
-
-
-
-
+/* int mod (int a, int b)
+ *
+ * This function provides modular operations for C. Because the C standard
+ *  defines the % operator as the remainder function, calling for a negative
+ *  number mod a positive number will result in a negative result.
+ *  i.e. -1 % 10 returns -9
+ * This function checks the output and if it is negative will add the mod value
+ *  to the result. mod(-1, 10) returns 9.
+ * This function is very heavily based on the following post on Stack Overflow:
+ * http://stackoverflow.com/a/4003287/738842
+ *
+ * Input:
+ *      Two integers
+ *
+ * Output:
+ *      a positive integer representing a modulo b
+ *
+ * Modifies:
+ *      none
+ *
+ * Assumptions:
+ *      b is a positive integer
+ *
+ */
 int mod (int a, int b)
 {
    int ret = a % b;
    if(ret < 0)
-     ret+=b;
+   {
+     ret += b;
+   }
    return ret;
 }
 
@@ -68,16 +90,14 @@ struct timeval time_stamp(struct timeval start, struct timeval current)
  *          once inside the function the input is recast as type t_data.
  *
  * Output:
- *    none (should return a int to indicate success or failure)
- *    currently prints each addition to the screen for testing purposes
+ *    writes output to logfiles
  *
  * Modifies:
  *    The buffer[] array of the struct is filled with random numbers.
  *    
  * Assumptions:
  *    buffer[] has already been allocated.
- *    That the cells of buffer[] have been zeroed and any current values in 
- *      data are of no concern.
+ *    That the cells of buffer[] have been zeroed.
  *
  * Note:
  *  Because this function is intended to be called as several dozen threads, the exact
@@ -91,8 +111,8 @@ void *producer(void *indata)
     
     while(TRUE)
     {
-        sleep(random()/1000000000);                        //generates a sleep from 0 to 21
-        int payload = random();                              //produce item
+        sleep(random()/1000000000);                             //generates a sleep from 0 to 21
+        int payload = random();                                 //produce item
         if (data->counter == MAX_SIZE)
         {
             sem_wait(&data->empty);
@@ -152,16 +172,14 @@ void *producer(void *indata)
  *          once inside the function the input is recast as type t_data.
  *
  * Output:
- *    none (should return a int to indicate success or failure)
- *    prints each removal to the screen for testing purposes
+ *    writes output to logfiles
  *
  * Modifies:
- *    The buffer[] array of the struct is filled with NULL values.
+ *    The buffer[] array of the struct is filled with random numbers.
  *    
  * Assumptions:
- *   buffer[] has already been allocated.
- *    That the cells of buffer[] are cleared to be zeroed and any current values in 
- *      data are of no concern.
+ *    buffer[] has already been allocated.
+ *    That the cells of buffer[] have been zeroed.
  *
  * Note:
  *  Because this function is intended to be called as several dozen threads, the exact
