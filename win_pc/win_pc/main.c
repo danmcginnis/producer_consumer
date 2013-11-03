@@ -8,8 +8,14 @@ int main(int argc, char *argv[])
 	int num_con_threads;
 	int i;
 	time_t clk;
-	HANDLE pro_threads[200];
-    HANDLE con_threads[200];
+	HANDLE pro_threads[1024];
+    HANDLE con_threads[1024];
+    /* Windows wouldn't let me use a variable that wasn't set at run time. So I
+     *  have set the thread array to be the max size of allowable input. If the
+     *  user enters thread numbers lower than 1024, the remainder of the array
+     *  will remain unused. This is not the most efficient method, but this 
+     *  program isn't meant for production.
+     */
 	
 	if (argc < 3)
     {
@@ -43,7 +49,6 @@ int main(int argc, char *argv[])
         printf("Cannot open log file!");
         exit(1);
     }
-
    
 	lab_3.tail = MAX_SIZE-1;
 	lab_3.head = 0;
@@ -57,10 +62,6 @@ int main(int argc, char *argv[])
     memset(lab_3.buffer, 0, MAX_SIZE);           //to zero out array initially
 
     srand((unsigned)time(NULL));                       
-   
-    
-
-   
 
     for (i = 0; i < num_con_threads; i++)
     {

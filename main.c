@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     memset(lab_3.buffer, 0, MAX_SIZE);           //to zero out array initially
 
-    srandom(time(NULL));                        //random is preferred over rand
+    srandom(time(NULL));
    
     pthread_t pro_threads[num_pro_threads];
     pthread_t con_threads[num_con_threads];

@@ -16,6 +16,6 @@ list:
 clean:
 	    @echo "Cleaning up.."
 		    -rm -rf *.o # - prefix for ignoring errors and continue execution
-				-rm log_file
+				-rm log_file # - clean up log files
 					-rm human_log_file
 					    -rm pc

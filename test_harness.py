@@ -21,6 +21,8 @@
 #   If python3 is located at the path listed above this file can be made
 #   executable and run without the python3 call before hand.
 #
+# I have tested this program on OS X and Ubuntu, but not on Windows 7.
+#
 
 
 from sys import exit

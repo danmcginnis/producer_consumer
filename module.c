@@ -37,7 +37,6 @@ int mod (int a, int b)
 
 
 
-
 /* struct timeval time_stamp(struct timeval start, struct timeval current)
  * 
  * This function takes two microsecond values and returns the difference. The
@@ -155,7 +154,7 @@ void *producer(void *indata)
 
 
 
-/* void consumer(void *indata)
+/* void *consumer(void *indata)
  *
  * This function accepts a void pointer to a struct as the input. The struct 
  *      is recast as type t_data before and work is done on it. 

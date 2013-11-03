@@ -38,7 +38,6 @@ int mod (int a, int b)
 
 
 
-
 /* struct timeval time_stamp(struct timeval start, struct timeval current)
  * 
  * This function takes two microsecond values and returns the difference. The
@@ -60,6 +59,8 @@ int mod (int a, int b)
  *      There is valid data in both input variables.
  *      The time gap being calculated is of a size that is reasonably
  *          represented in microseconds [ i.e. less an several minutes].
+ *
+ * This function is unused in Windows.
 */
 struct timeval time_stamp(struct timeval start, struct timeval current)
 {
@@ -75,7 +76,7 @@ struct timeval time_stamp(struct timeval start, struct timeval current)
 
 
 
-/* void *producer(void *indata)
+/* unsigned __stdcall producer(void *indata)
  *
  * This function accepts a void pointer to a struct as the input. The struct 
  *      is recast as type t_data before and work is done on it. 
@@ -161,7 +162,7 @@ unsigned __stdcall producer(void *indata)
 
 
 
-/* void consumer(void *indata)
+/* unsigned __stdcall consumer(void *indata) 
  *
  * This function accepts a void pointer to a struct as the input. The struct 
  *      is recast as type t_data before and work is done on it. 
@@ -214,7 +215,6 @@ unsigned __stdcall consumer(void *indata)
             fprintf(human_log_file, "An empty cell was encountered. Logging, unlocking, and continuing.\n");
             fprintf(human_log_file, "\t Consumer head = %d", data->head);
             fprintf(human_log_file, "\tbuffer value = %d\n", data->buffer[data->head]);
-            
         }
         else 
         {

@@ -8,7 +8,13 @@
 #include <unistd.h>
 
 #define TRUE 1
-#define MAX_SIZE 1000         
+#define MAX_SIZE 1000  
+
+#ifndef bool
+    #define bool int
+    #define false ((bool)0)
+    #define true  ((bool)1)
+#endif
 
 FILE *human_log_file;
 FILE *log_file;
