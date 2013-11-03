@@ -5,9 +5,16 @@
 #include <windows.h>
 #include <time.h>
 #include <process.h>
+#include <malloc.h>  
 
 #define TRUE 1
-#define MAX_SIZE 1000         
+#define MAX_SIZE 1000  
+
+#ifndef bool
+    #define bool int
+    #define false ((bool)0)
+    #define true  ((bool)1)
+#endif
 
 FILE *human_log_file;
 FILE *log_file;
@@ -19,8 +26,8 @@ SYSTEMTIME temp_time;
 typedef struct t_data
 { 
     HANDLE mutex;
-    sem_t empty;
-    sem_t full;
+    HANDLE empty;
+    HANDLE full;
     int counter;
     int tail;
     int head;
@@ -29,7 +36,7 @@ typedef struct t_data
 
 
 void print_array(int data[], int size);
-void *producer(void *indata);
-void *consumer(void *indata);
+unsigned __stdcall producer(void *indata);
+unsigned __stdcall consumer(void *indata);
 int mod (int a, int b);
 struct timeval time_stamp(struct timeval start, struct timeval current);

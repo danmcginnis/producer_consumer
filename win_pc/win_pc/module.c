@@ -26,7 +26,8 @@
  */
 int mod (int a, int b)
 {
-   int ret = a % b;
+   int ret;
+   ret = a % b;
    if(ret < 0)
    {
      ret += b;
@@ -104,14 +105,19 @@ struct timeval time_stamp(struct timeval start, struct timeval current)
  *
  *
  */
-void *producer(void *indata)
+unsigned __stdcall producer(void *indata)
 {
-    t_data *data = indata;
+    t_data *data = (t_data*) indata;
+	int temp;
+	int payload;
     
     while(TRUE)
     {
-        Sleep(rand()/100);										//generates a Sleep from 0 to 21
-        int payload = rand();                                 //produce item
+        
+		temp = rand();
+		Sleep(temp/100);										//generates a Sleep from 0 to 21
+        
+		payload = rand();									    //produce item
         if (data->counter == MAX_SIZE)
         {
             WaitForMultipleObjects(MAX_SIZE, &data->empty, FALSE, INFINITE);
@@ -127,13 +133,13 @@ void *producer(void *indata)
                 fprintf(human_log_file, "Error writing to buffer!\n");
                 ReleaseMutex(&data->mutex);            
                 ReleaseSemaphore(&data->full, 1, NULL);
-                return NULL;
+                return 0;
             }
 
             GetSystemTime(&current);
-            temp_time = start - current;
+            temp_time.wMilliseconds = start.wMilliseconds - current.wMilliseconds;
             fprintf(log_file, "%d\n", payload);
-            fprintf(human_log_file, "%13d was written to the data structure at %d microseconds.\n", payload, temp_time);
+            fprintf(human_log_file, "%13d was written to the data structure at %d microseconds.\n", payload, temp_time.wMilliseconds);
             fprintf(human_log_file, "\tProducer tail = %d", data->tail);
             fprintf(human_log_file, "\tCounter = %d\n", data->counter);
             data->counter++;
@@ -149,7 +155,7 @@ void *producer(void *indata)
         ReleaseMutex(&data->mutex);            
         ReleaseSemaphore(&data->full, 1, NULL);
     }
-    return NULL;
+    return 0;
 }
 
 
@@ -184,13 +190,15 @@ void *producer(void *indata)
  *      order of it's behavior is not guarenteed.
  *
  */
-void *consumer(void *indata) 
+unsigned __stdcall consumer(void *indata) 
 {
-    t_data *data = indata;
+   t_data *data = (t_data*) indata;
+    int temp;
     while(TRUE)
     {
 
-        int temp = 0;
+       
+		temp = 0;
         Sleep(rand()/100);                      //generates a Sleep from 0 to 21
         if(data->counter == 0) 
         {
@@ -212,9 +220,9 @@ void *consumer(void *indata)
         {
             data->buffer[data->head] = 0;
             GetSystemTime(&current);
-            temp_time = start - current;
+            temp_time.wMilliseconds = start.wMilliseconds - current.wMilliseconds;
             fprintf(log_file, "%d\n", temp);
-            fprintf(human_log_file, "%13d was removed from the data structure at %d microseconds.\n", temp, temp_time);
+            fprintf(human_log_file, "%13d was removed from the data structure at %d microseconds.\n", temp, temp_time.wMilliseconds);
             fprintf(human_log_file, "\tConsumer head = %d", data->head);
             fprintf(human_log_file, "\tCounter = %d\n", data->counter);
             data->counter--;
@@ -224,5 +232,5 @@ void *consumer(void *indata)
         ReleaseMutex(&data->mutex);
         ReleaseSemaphore(&data->full, 1, NULL);
     }
-    return NULL;
+    return 0;
 }

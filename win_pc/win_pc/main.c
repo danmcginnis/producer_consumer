@@ -2,13 +2,23 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc < 3)
+    
+	static t_data lab_3;
+	int num_pro_threads;
+	int num_con_threads;
+	int i;
+	time_t clk;
+	HANDLE pro_threads[200];
+    HANDLE con_threads[200];
+	
+	if (argc < 3)
     {
          printf("Proper usage: \npc number of producer threads  number of consumer threads\n");
          exit(1);
     } 
-    int num_pro_threads = atoi(argv[1]);
-    int num_con_threads = atoi(argv[2]);
+    
+	num_pro_threads = atoi(argv[1]);
+    num_con_threads = atoi(argv[2]);
 
     if ((num_pro_threads < 2) || (num_pro_threads > 1024))
     {
@@ -34,31 +44,34 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    static t_data lab_3 = {.tail = MAX_SIZE-1, .head = 0, .counter = 0};
+   
+	lab_3.tail = MAX_SIZE-1;
+	lab_3.head = 0;
+	lab_3.counter = 0;
     
     GetSystemTime(&start);
     lab_3.mutex = CreateMutex(NULL, false, NULL);
-    CreateSemaphore(NULL, 0, MAX_SIZE, &lab_3.empty);
-    CreateSemaphore(NULL, 0, 0, &lab_3.full);
+    lab_3.empty = CreateSemaphore(NULL, 0, MAX_SIZE, NULL);
+    lab_3.full = CreateSemaphore(NULL, 0, 0, NULL);
 
     memset(lab_3.buffer, 0, MAX_SIZE);           //to zero out array initially
 
     srand((unsigned)time(NULL));                       
    
-    pthread_t pro_threads[num_pro_threads];
-    pthread_t con_threads[num_con_threads];
+    
 
-    int i = 0;
+   
 
     for (i = 0; i < num_con_threads; i++)
     {
-        pthread_create(&con_threads[i], NULL, consumer, &lab_3);
+        unsigned thread_id;
+		con_threads[i] = (HANDLE)_beginthreadex(NULL, 0, consumer, &lab_3, 0, &thread_id);
     }
 
     for (i = 0; i < num_pro_threads; i++)
     {
-        pthread_create(&pro_threads[i], NULL, producer, &lab_3);
-        
+        unsigned thread_id;
+		pro_threads[i] = (HANDLE)_beginthreadex(NULL, 0, producer, &lab_3, 0, &thread_id);
     }
 
     /* The large buffer size combined with a large number of threads makes visual inspection
@@ -70,16 +83,16 @@ int main(int argc, char *argv[])
     
     for (i = 0; i < num_pro_threads; i++) 
     {
-        pthread_join(pro_threads[i], NULL);
+        WaitForSingleObject(pro_threads[i], NULL);
     }
 
     for (i = 0; i < num_con_threads; i++) 
     {
-        pthread_join(con_threads[i], NULL);
+        WaitForSingleObject(con_threads[i], NULL);
     }
 
     fprintf(human_log_file, "All %d threads have returned.\n", (num_pro_threads + num_con_threads));
-    time_t clk = time(NULL);
+    clk = time(NULL);
     fprintf(human_log_file, "Log File closed at %s\n", ctime(&clk));
     fprintf(human_log_file, "##---------------------------------------------------------------------##\n");
     fclose(human_log_file);
