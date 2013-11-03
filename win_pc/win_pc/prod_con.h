@@ -7,6 +7,7 @@
 #include <math.h>
 //#include <unistd.h>
 #include <windows.h>
+#include <time.h>
 
 #define TRUE 1
 #define MAX_SIZE 1000         
