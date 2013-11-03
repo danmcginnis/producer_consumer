@@ -110,7 +110,7 @@ void *producer(void *indata)
     
     while(TRUE)
     {
-        sleep(random()/1000000000);                             //generates a sleep from 0 to 21
+        Sleep(random()/1000000000);                             //generates a Sleep from 0 to 21
         int payload = random();                                 //produce item
         if (data->counter == MAX_SIZE)
         {
@@ -130,10 +130,10 @@ void *producer(void *indata)
                 return NULL;
             }
 
-            gettimeofday(&current, NULL);
-            temp_time = time_stamp(start, current);
+            GetSystemTime(&current);
+            temp_time = start - current;
             fprintf(log_file, "%d\n", payload);
-            fprintf(human_log_file, "%13d was written to the data structure at %d microseconds.\n", payload, temp_time.tv_usec);
+            fprintf(human_log_file, "%13d was written to the data structure at %d microseconds.\n", payload, temp_time);
             fprintf(human_log_file, "\tProducer tail = %d", data->tail);
             fprintf(human_log_file, "\tCounter = %d\n", data->counter);
             data->counter++;
@@ -191,7 +191,7 @@ void *consumer(void *indata)
     {
 
         int temp = 0;
-        sleep(random()/1000000000);                      //generates a sleep from 0 to 21
+        Sleep(random()/1000000000);                      //generates a Sleep from 0 to 21
         if(data->counter == 0) 
         {
             sem_wait(&data->empty);
@@ -211,10 +211,10 @@ void *consumer(void *indata)
         else 
         {
             data->buffer[data->head] = 0;
-            gettimeofday(&current, NULL);
-            temp_time = time_stamp(start, current);
+            GetSystemTime(&current);
+            temp_time = start - current;
             fprintf(log_file, "%d\n", temp);
-            fprintf(human_log_file, "%13d was removed from the data structure at %d microseconds.\n", temp, temp_time.tv_usec);
+            fprintf(human_log_file, "%13d was removed from the data structure at %d microseconds.\n", temp, temp_time);
             fprintf(human_log_file, "\tConsumer head = %d", data->head);
             fprintf(human_log_file, "\tCounter = %d\n", data->counter);
             data->counter--;

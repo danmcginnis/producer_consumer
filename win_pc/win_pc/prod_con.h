@@ -6,7 +6,7 @@
 //#include <semaphore.h>
 #include <math.h>
 //#include <unistd.h>
-#include <Windows.h>
+#include <windows.h>
 
 #define TRUE 1
 #define MAX_SIZE 1000         
@@ -14,9 +14,9 @@
 FILE *human_log_file;
 FILE *log_file;
 
-struct timeval start;
-struct timeval current;
-struct timeval temp_time;
+SYSTEMTIME start;
+SYSTEMTIME current;
+SYSTEMTIME temp_time;
 
 typedef struct t_data
 { 

@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
     static t_data lab_3 = {.tail = MAX_SIZE-1, .head = 0, .counter = 0};
     
-    gettimeofday(&start, NULL);
+    GetSystemTime(&start);
     pthread_mutex_init (&lab_3.mutex, NULL);
     sem_init(&lab_3.empty, 0, MAX_SIZE);
     sem_init(&lab_3.full, 0, 0);
