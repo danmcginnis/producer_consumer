@@ -1,13 +1,10 @@
 #include <stdio.h>
-//#include <sys/time.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <pthread.h>
-//#include <semaphore.h>
 #include <math.h>
-//#include <unistd.h>
 #include <windows.h>
 #include <time.h>
+#include <process.h>
 
 #define TRUE 1
 #define MAX_SIZE 1000         
@@ -21,7 +18,7 @@ SYSTEMTIME temp_time;
 
 typedef struct t_data
 { 
-    pthread_mutex_t mutex;
+    HANDLE mutex;
     sem_t empty;
     sem_t full;
     int counter;

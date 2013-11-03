@@ -117,7 +117,7 @@ void *producer(void *indata)
             sem_wait(&data->empty);
             fprintf(human_log_file, "\n\nCounter is at MAX_SIZE. Waiting...\n\n");    
         }  
-        pthread_mutex_lock(&data->mutex);             
+        WaitForSingleObject(&data->mutex, INFINITE);           
         
 
         if (data->buffer[data->tail] == 0)
@@ -146,7 +146,7 @@ void *producer(void *indata)
             fprintf(human_log_file, "\tbuffer value = %d\n", data->buffer[data->tail]);
         }
         data->tail = mod((data->tail - 1),  MAX_SIZE);
-        pthread_mutex_unlock(&data->mutex);            
+        ReleaseMutex(&data->mutex);            
         sem_post(&data->full);
     }
     return NULL;
@@ -197,7 +197,7 @@ void *consumer(void *indata)
             sem_wait(&data->empty);
             fprintf(human_log_file, "\n\nCounter is at ZERO. Waiting...\n\n"); 
         }
-        pthread_mutex_lock(&data->mutex);
+        WaitForSingleObject(&data->mutex, INFINITE);
 
         temp = data->buffer[data->head];
         
@@ -221,7 +221,7 @@ void *consumer(void *indata)
         }
         
         data->head = mod((data->head + 1), MAX_SIZE);
-        pthread_mutex_unlock(&data->mutex);
+        ReleaseMutex(&data->mutex);
         sem_post(&data->full);
     }
     return NULL;

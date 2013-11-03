@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     static t_data lab_3 = {.tail = MAX_SIZE-1, .head = 0, .counter = 0};
     
     GetSystemTime(&start);
-    pthread_mutex_init (&lab_3.mutex, NULL);
+    lab_3.mutex = CreateMutex(NULL, false, NULL);
     sem_init(&lab_3.empty, 0, MAX_SIZE);
     sem_init(&lab_3.full, 0, 0);
 
@@ -84,6 +84,6 @@ int main(int argc, char *argv[])
     fprintf(human_log_file, "##---------------------------------------------------------------------##\n");
     fclose(human_log_file);
     fclose(log_file);
-    pthread_mutex_destroy(&lab_3.mutex);
+    CloseHandle(&lab_3.mutex);
     return 0;
 }
