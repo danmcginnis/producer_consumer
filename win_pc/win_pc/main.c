@@ -38,8 +38,8 @@ int main(int argc, char *argv[])
     
     GetSystemTime(&start);
     lab_3.mutex = CreateMutex(NULL, false, NULL);
-    sem_init(&lab_3.empty, 0, MAX_SIZE);
-    sem_init(&lab_3.full, 0, 0);
+    CreateSemaphore(NULL, 0, MAX_SIZE, &lab_3.empty);
+    CreateSemaphore(NULL, 0, 0, &lab_3.full);
 
     memset(lab_3.buffer, 0, MAX_SIZE);           //to zero out array initially
 

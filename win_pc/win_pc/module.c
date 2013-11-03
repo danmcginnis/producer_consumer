@@ -114,7 +114,7 @@ void *producer(void *indata)
         int payload = rand();                                 //produce item
         if (data->counter == MAX_SIZE)
         {
-            sem_wait(&data->empty);
+            WaitForMultipleObjects(MAX_SIZE, &data->empty, FALSE, INFINITE);
             fprintf(human_log_file, "\n\nCounter is at MAX_SIZE. Waiting...\n\n");    
         }  
         WaitForSingleObject(&data->mutex, INFINITE);           
@@ -125,8 +125,8 @@ void *producer(void *indata)
             if(!(data->buffer[data->tail] = payload))
             {
                 fprintf(human_log_file, "Error writing to buffer!\n");
-                pthread_mutex_unlock(&data->mutex);             
-                sem_post(&data->full);
+                ReleaseMutex(&data->mutex);            
+                ReleaseSemaphore(&data->full, 1, NULL);
                 return NULL;
             }
 
@@ -147,7 +147,7 @@ void *producer(void *indata)
         }
         data->tail = mod((data->tail - 1),  MAX_SIZE);
         ReleaseMutex(&data->mutex);            
-        sem_post(&data->full);
+        ReleaseSemaphore(&data->full, 1, NULL);
     }
     return NULL;
 }
@@ -194,7 +194,7 @@ void *consumer(void *indata)
         Sleep(rand()/100);                      //generates a Sleep from 0 to 21
         if(data->counter == 0) 
         {
-            sem_wait(&data->empty);
+            WaitForMultipleObjects(MAX_SIZE, &data->empty, FALSE, INFINITE);
             fprintf(human_log_file, "\n\nCounter is at ZERO. Waiting...\n\n"); 
         }
         WaitForSingleObject(&data->mutex, INFINITE);
@@ -222,7 +222,7 @@ void *consumer(void *indata)
         
         data->head = mod((data->head + 1), MAX_SIZE);
         ReleaseMutex(&data->mutex);
-        sem_post(&data->full);
+        ReleaseSemaphore(&data->full, 1, NULL);
     }
     return NULL;
 }
